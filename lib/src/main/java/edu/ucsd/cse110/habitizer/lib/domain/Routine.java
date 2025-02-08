@@ -1,19 +1,17 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-import java.util.Objects;
 public class Routine {
 
-    private final @NonNull String title;
+    private final @Nullable Integer id;
+    private @NonNull String title;
 
-    private final @NonNull Time goalTime;
+    private @NonNull Time goalTime;
 
     private final @NonNull List<Task> tasks;
 
@@ -23,7 +21,8 @@ public class Routine {
 
     private @NonNull boolean isStarted;
 
-    public Routine(String title,int goalHours, int goalMinutes){
+    public Routine(int id, String title,int goalHours, int goalMinutes){
+        this.id = id;
         this.title = title;
         this.goalTime = new Time(goalHours,goalMinutes,0);
         this.tasks = new ArrayList<Task>();
@@ -59,8 +58,25 @@ public class Routine {
     }
 
 
+    @NonNull
+    public String getTitle() {
+        return title;
+    }
 
+    @NonNull
+    public Time getGoalTime() {
+        return goalTime;
+    }
 
+    public void setTitle(@NonNull String title){
+        this.title = title;
+    }
+    public void setGoalTime(@NonNull Time goalTime) {
+        this.goalTime = goalTime;
+    }
 
+    public @Nullable Integer id() {
+        return this.id;
+    }
 }
 

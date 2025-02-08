@@ -49,5 +49,8 @@ public class Time {
         this.seconds = seconds;
     }
 
-
+    @Override
+    public String toString() {
+        return hours+":"+minutes+":"+seconds;
+    }
 }
