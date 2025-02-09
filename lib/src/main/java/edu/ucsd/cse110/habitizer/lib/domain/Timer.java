@@ -1,53 +1,20 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
-import java.time.Duration;
-import java.time.Instant;
+//Getting Time logic: https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
 
 public class Timer {
-    private Instant startTime;
-
-    private Instant endTime;
-
-    private Time elapsedTime;
+    private long startTime;
 
     public Timer(){
-        this.startTime = null;
-        this.endTime = null;
-        this.elapsedTime = null;
+        this.startTime = 0;
     }
 
-    public Instant getStartTime() {
-        return startTime;
+    public void startTimer() {
+        //Convert from the given milliseconds to seconds
+        this.startTime = System.currentTimeMillis()/1000;
     }
 
-    public Instant getEndTime() {
-        return endTime;
+    public long getElapsedTime() {
+        return (System.currentTimeMillis()/1000)-this.startTime;
     }
-
-    public void setStartTime(Instant startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Instant endTime) {
-        this.endTime = endTime;
-    }
-
-    public void startTimer(){
-        startTime = Instant.now();
-    }
-
-    public void endTimer(){
-        endTime = Instant.now();
-    }
-
-    public Time calculateElapsedTime(){
-        if(startTime != null && endTime != null){
-            long elapsedSeconds = Duration.between(startTime, endTime).getSeconds();
-            elapsedTime = new Time(elapsedSeconds);
-            return elapsedTime;
-        } else{
-            throw new IllegalArgumentException("Timer did not work");
-        }
-    }
-
 }
