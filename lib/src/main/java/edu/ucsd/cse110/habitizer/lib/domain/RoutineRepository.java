@@ -10,7 +10,7 @@ import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class RoutineRepository {
 
-    public static final RoutineRepository rM = new RoutineRepository(InMemoryDataSource.inMemoryDataSource);
+    public static final RoutineRepository rM = new RoutineRepository(InMemoryDataSource.fromDefault());
 
     private final InMemoryDataSource dataSource;
     private final Timer timer;

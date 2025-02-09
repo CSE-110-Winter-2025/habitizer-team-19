@@ -10,9 +10,6 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class InMemoryDataSource {
-
-    public static InMemoryDataSource inMemoryDataSource = fromDefault();
-
     private final Map<String, Routine> routines
             = new HashMap<>();
     private final Map<String, Subject<Routine>> routineSubjects
