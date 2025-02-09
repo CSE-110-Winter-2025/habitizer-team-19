@@ -36,8 +36,8 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
             binding = ListItemRoutineBinding.inflate(layoutInflater, parent, false);
         }
 
-        binding.routineTitle.setText(routine.getTitle());
-        binding.goalTime.setText(routine.getGoalTime().toString());
+        binding.routineTitle.setText(routine.getName());
+        binding.goalTime.setText(Long.toString(routine.getGoalTime()));
 
         return binding.getRoot();
     }
@@ -45,17 +45,6 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
     @Override
     public boolean hasStableIds() {
         return true;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        var routine = getItem(position);
-        assert routine != null;
-
-        var id = routine.id();
-        assert id != -1;
-
-        return id;
     }
 
 
