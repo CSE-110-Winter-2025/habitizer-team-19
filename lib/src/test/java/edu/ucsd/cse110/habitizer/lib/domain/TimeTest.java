@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
+import java.sql.Time;
+
 public class TimeTest {
 
     @Test
