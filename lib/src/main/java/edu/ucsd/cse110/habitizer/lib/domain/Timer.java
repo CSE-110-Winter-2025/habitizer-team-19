@@ -15,6 +15,9 @@ public class Timer {
     }
 
     public long getElapsedTime() {
+        if (startTime == 0){
+            return 0; //return 0 if the timer has not been started
+        }
         return (System.currentTimeMillis()/1000)-this.startTime;
     }
 }

@@ -20,6 +20,10 @@ public class Task {
         this.elapsedTime = -1;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public long getElapsedTime() {
         return this.elapsedTime;
     }
@@ -29,7 +33,7 @@ public class Task {
     }
     public void complete(long time){
         CompletionStatus = 1;
-        elapsedTime = time;
+        elapsedTime = time; // in what units? seconds? milliseconds?
     }
 
     public void skip(){

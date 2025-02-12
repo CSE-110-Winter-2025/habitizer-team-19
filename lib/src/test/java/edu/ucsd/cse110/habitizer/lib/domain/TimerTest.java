@@ -1,12 +1,39 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class TimerTest extends TestCase {
+import org.junit.Test;
 
-    public void testStartTimer() {
+public class TimerTest {
+
+    @Test
+    public void getStartTime() {
+
+
+
     }
 
-    public void testGetElapsedTime() {
+    @Test
+    public void getEndTime() {
+    }
+
+    @Test
+    public void setStartTime() {
+    }
+
+    @Test
+    public void setEndTime() {
+    }
+
+    @Test
+    public void startTimer() {
+    }
+
+    @Test
+    public void endTimer() {
+    }
+
+    @Test
+    public void calculateElapsedTime() {
     }
 }
