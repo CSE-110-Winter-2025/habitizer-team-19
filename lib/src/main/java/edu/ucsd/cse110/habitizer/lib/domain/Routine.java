@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class Routine {
 
@@ -80,7 +81,7 @@ public class Routine {
     }
 
 
-
-
-
+    public List<Task> getTasks() {
+        return tasks;
+    }
 }

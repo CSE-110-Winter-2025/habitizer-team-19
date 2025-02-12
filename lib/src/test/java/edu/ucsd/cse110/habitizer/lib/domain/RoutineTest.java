@@ -1,21 +1,27 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
-import org.junit.Test;
+public class RoutineTest extends TestCase {
 
-public class RoutineTest {
-
-    @Test
-    public void startRoutine() {
-
+    public void testAddTask() {
     }
 
-    @Test
-    public void endRoutine() {
+    public void testRemoveTask() {
     }
 
-    @Test
-    public void addTask() {
+    public void testTestGetName() {
+    }
+
+    public void testGetGoalTime() {
+    }
+
+    public void testNewGoalTime() {
+    }
+
+    public void testNewName() {
+    }
+
+    public void testReset() {
     }
 }

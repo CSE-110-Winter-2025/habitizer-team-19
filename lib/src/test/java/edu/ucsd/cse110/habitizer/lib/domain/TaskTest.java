@@ -1,28 +1,24 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
-import org.junit.Test;
+public class TaskTest extends TestCase {
 
-public class TaskTest {
-
-    @Test
-    public void restartTimer() {
+    public void testGetElapsedTime() {
     }
 
-    @Test
-    public void isCompleted() {
+    public void testGetCompletionStatus() {
     }
 
-    @Test
-    public void isSkipped() {
+    public void testComplete() {
     }
 
-    @Test
-    public void complete() {
+    public void testSkip() {
     }
 
-    @Test
-    public void skip() {
+    public void testReset() {
+    }
+
+    public void testNewName() {
     }
 }
