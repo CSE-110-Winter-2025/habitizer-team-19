@@ -9,10 +9,6 @@ public class Task {
     private long elapsedTime;
     //any negative value (or just -1) gets displayed as "-" as in skipped or not completed
 
-    @NonNull
-    public String getName() {
-        return name;
-    }
 
     public Task(@NonNull String name){
         this.name = name;

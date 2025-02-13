@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class Routine {
     public Routine(@NonNull String name, long goalTimeSeconds, @NonNull ArrayList<Task> tasks){
         this.name = name;
         this.goalTimeSeconds = goalTimeSeconds;
-        this.tasks = tasks;
+        this.tasks = new ArrayList<>(tasks);
     }
 
 //    public void startRoutine(){
@@ -66,7 +67,7 @@ public class Routine {
         return goalTimeSeconds;
     }
 
-    public void newGoalTime(int newTime) {
+    public void newGoalTime(long newTime) {
         this.goalTimeSeconds = newTime;
     }
 
