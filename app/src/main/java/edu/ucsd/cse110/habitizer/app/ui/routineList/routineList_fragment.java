@@ -2,6 +2,8 @@ package edu.ucsd.cse110.habitizer.app.ui.routineList;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -60,10 +62,10 @@ public class routineList_fragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,
+                            @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        this.view = FragmentRoutineListBinding.inflate(inflater, container, false);
+        view = FragmentRoutineListBinding.inflate(inflater, container, false);
         view.routineList.setAdapter(adapter);
 
         view.routineList.setOnItemClickListener((parent, view, position, id) -> {

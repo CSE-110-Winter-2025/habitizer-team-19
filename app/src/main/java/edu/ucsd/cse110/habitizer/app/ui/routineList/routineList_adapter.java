@@ -37,7 +37,7 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
         }
 
         binding.routineTitle.setText(routine.getName());
-        binding.goalTime.setText(Long.toString(routine.getGoalTime()));
+        binding.goalTime.setText(routine.getGoalTimeToString());
 
         return binding.getRoot();
     }

@@ -67,6 +67,14 @@ public class Routine {
         return goalTimeSeconds;
     }
 
+    public String getGoalTimeToString(){
+        var hours = goalTimeSeconds / 3600;
+        var minutes = (goalTimeSeconds % 3600) / 60;
+        var seconds = goalTimeSeconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
     public void newGoalTime(long newTime) {
         this.goalTimeSeconds = newTime;
     }

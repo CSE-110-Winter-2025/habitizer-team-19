@@ -3,15 +3,13 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 dependencies {
-    // This library contains no executable code, so it is
-    // safe to use even in a non-Android library module.
-    implementation(libs.androidx.annotations)
+    implementation("androidx.annotation:annotation:1.7.1")
 
     testImplementation(libs.junit4)
-    testImplementation(libs.hamcrest)
+
 }
