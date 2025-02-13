@@ -1,17 +1,16 @@
 package edu.ucsd.cse110.habitizer.app;
 
 import android.os.Bundle;
-import android.view.Menu;
+
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+
 
 import edu.ucsd.cse110.habitizer.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
@@ -22,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isTaskListFragmentVisible = false;
     private Toolbar toolbar;
     private TextView toolbarTitle;
+
+    private TextView toolbarSubtitle;
     private ActivityMainBinding view;
 
     private void updateBackButtonVisibility() {
@@ -36,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, taskList_fragment.newInstance(selectedRoutineTitle))
                 .commit();
 
-        toolbarTitle.setText(selectedRoutineTitle + " " + selectedRoutineGoalTime);
+        toolbarTitle.setText(selectedRoutineTitle);
+        toolbarSubtitle.setVisibility(View.VISIBLE);
+        toolbarSubtitle.setText(selectedRoutineGoalTime);
         updateBackButtonVisibility();
     }
 
@@ -48,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, routineList_fragment.newInstance())
                 .commit();
 
-        toolbarTitle.setText(R.string.app_title);
+        toolbarTitle.setText("Routines");
+        toolbarSubtitle.setVisibility(View.GONE);
         updateBackButtonVisibility();
     }
 
@@ -62,13 +66,18 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Toolbar and Title
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+            toolbarSubtitle = findViewById(R.id.toolbar_subtitle);
+            toolbarSubtitle.setVisibility(View.GONE);
+        }
 
         updateBackButtonVisibility();
 
         toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(R.string.app_title);
+        toolbarTitle.setText("Routines");
 
         // Initial Fragment
         swapFragmentRoutineList();
