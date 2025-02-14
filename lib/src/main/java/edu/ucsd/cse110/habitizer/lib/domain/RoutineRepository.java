@@ -35,4 +35,19 @@ public class RoutineRepository {
     public void save(Routine routine) {
         dataSource.putRoutine(routine);
     }
+
+    public void startTimer() {
+        timer.startTimer();
+    }
+
+    public long getElapsedTime() {
+        return timer.getElapsedTime();
+    }
+    /*
+    public long getTimeDifference(long seconds) {
+        return seconds - ;
+    }
+    */
+
+
 }

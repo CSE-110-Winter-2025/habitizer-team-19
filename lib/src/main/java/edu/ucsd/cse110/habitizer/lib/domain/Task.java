@@ -9,11 +9,13 @@ public class Task {
     private long elapsedTime;
     //any negative value (or just -1) gets displayed as "-" as in skipped or not completed
 
+    private long prevTaskTime;
 
     public Task(@NonNull String name){
         this.name = name;
         this.CompletionStatus = 0;
         this.elapsedTime = -1;
+        this.prevTaskTime = -1;
     }
 
     public String getName() {
@@ -27,6 +29,14 @@ public class Task {
     public int getCompletionStatus() {
         return this.CompletionStatus;
     }
+
+    /*
+    public long getPrevTaskTime() {
+
+    }
+
+     */
+
     public void complete(long time){
         CompletionStatus = 1;
         elapsedTime = time; // in what units? seconds? milliseconds?
