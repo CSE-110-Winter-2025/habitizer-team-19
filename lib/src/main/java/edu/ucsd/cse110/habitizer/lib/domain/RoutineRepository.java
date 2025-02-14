@@ -15,24 +15,24 @@ public class RoutineRepository {
     private final InMemoryDataSource dataSource;
     private final Timer timer;
 
-    private boolean hasStarted = false;
+    private int hasStarted = 0;
 
-    public void setHasStarted(boolean started){
+    public void setHasStarted(int started){
         this.hasStarted = started;
     }
 
-    public boolean getHasStarted(){
+    public int getHasStarted(){
         return this.hasStarted;
     }
 
     public void start(){
         startTimer();
-        setHasStarted(true);
+        setHasStarted(1);
     }
 
     public void end(){
-        endTimer();;
-        setHasStarted(false);
+        endTimer();
+        setHasStarted(2);
     }
 
     public RoutineRepository(InMemoryDataSource dataSource) {
@@ -79,6 +79,7 @@ public class RoutineRepository {
                 routine.reset();
             }
         });
+        setHasStarted(0);
     }
 
 

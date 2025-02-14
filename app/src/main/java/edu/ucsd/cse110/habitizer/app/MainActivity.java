@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private void updateBackButtonVisibility() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(isTaskListFragmentVisible);
 
+
+
     }
     public void swapFragmentTaskList(@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
         isTaskListFragmentVisible = true;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         updateBackButtonVisibility();
     }
 
-    private void swapFragmentRoutineList(){
+    public void swapFragmentRoutineList(){
         isTaskListFragmentVisible = false;
 
         getSupportFragmentManager()
