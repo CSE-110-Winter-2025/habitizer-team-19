@@ -26,9 +26,21 @@ public class Task {
         return this.elapsedTime;
     }
 
+    public String getElapsedTimeToString() {
+        if(elapsedTime == -1){
+            return "--:--:--";
+        }
+        var hours = this.elapsedTime / 3600;
+        var minutes = (this.elapsedTime % 3600) / 60;
+        var seconds = this.elapsedTime % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
     public int getCompletionStatus() {
         return this.CompletionStatus;
     }
+<<<<<<< Updated upstream
 
     /*
     public long getPrevTaskTime() {
@@ -38,8 +50,11 @@ public class Task {
      */
 
     public void complete(long time){
+=======
+    public String complete(){
+>>>>>>> Stashed changes
         CompletionStatus = 1;
-        elapsedTime = time; // in what units? seconds? milliseconds?
+        return getElapsedTimeToString();
     }
 
     public void skip(){

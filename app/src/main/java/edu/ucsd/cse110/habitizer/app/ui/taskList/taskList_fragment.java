@@ -14,6 +14,7 @@ import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 
@@ -58,6 +59,7 @@ public class taskList_fragment extends Fragment{
             this.activityModel = modelProvider.get(MainViewModel.class);
 
             this.adapter = new taskList_adapter(requireContext(), List.of());
+
             activityModel.getTasks(selectedRoutine).observe(tasks -> {
                 if (tasks == null) return;
                 adapter.clear();

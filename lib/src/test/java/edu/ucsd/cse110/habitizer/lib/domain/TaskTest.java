@@ -24,7 +24,7 @@ public class TaskTest {
 
     @Test
     public void testComplete() {
-        task.complete(1000); //1000 seconds
+        task.complete(); //1000 seconds
         assertEquals(1, task.getCompletionStatus());
         assertEquals(1000, task.getElapsedTime());
     }
@@ -39,7 +39,7 @@ public class TaskTest {
     @Test
     public void testReset() {
         //mark completed
-        task.complete(1000);
+        task.complete();
         assertEquals(1, task.getCompletionStatus());
         assertEquals(1000, task.getElapsedTime());
 
@@ -70,14 +70,14 @@ public class TaskTest {
         assertEquals(2, task.getCompletionStatus());
         assertEquals(-1, task.getElapsedTime());
 
-        task.complete(500);
+        task.complete();
         assertEquals(1, task.getCompletionStatus());
         assertEquals(500, task.getElapsedTime());
     }
 
     @Test
     public void testSkipAfterComplete(){
-        task.complete(500);
+        task.complete();
         assertEquals(1, task.getCompletionStatus());
         assertEquals(500, task.getElapsedTime());
 

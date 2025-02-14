@@ -48,4 +48,10 @@ public class MainViewModel extends ViewModel {
         tasks.setValue(Objects.requireNonNull(routineRepository.find(routineName).getValue()).getTasks());
         return tasks;
     }
+
+    public Subject<RoutineRepository> getRepository(){
+        var repository = new Subject<RoutineRepository>();
+        repository.setValue(routineRepository);
+        return repository;
+    }
 }

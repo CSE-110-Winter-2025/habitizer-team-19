@@ -36,6 +36,7 @@ public class RoutineRepository {
         dataSource.putRoutine(routine);
     }
 
+<<<<<<< Updated upstream
     public void startTimer() {
         timer.startTimer();
     }
@@ -50,4 +51,9 @@ public class RoutineRepository {
     */
 
 
+=======
+    public Timer getTimer(){
+        return timer;
+    }
+>>>>>>> Stashed changes
 }

@@ -55,7 +55,7 @@ public class Routine {
     }
 
     public void removeTask(String name) {
-        //Use the name to find and remove the task
+        tasks.removeIf(task -> Objects.equals(task.getName(), name));
     }
 
     @NonNull
@@ -88,7 +88,6 @@ public class Routine {
             task.reset();
         }
     }
-
 
     public List<Task> getTasks() {
         return tasks;

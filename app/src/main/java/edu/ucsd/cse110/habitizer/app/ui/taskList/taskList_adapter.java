@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.databinding.ListItemTaskBinding;
+import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class taskList_adapter extends ArrayAdapter<Task> {
@@ -19,7 +20,6 @@ public class taskList_adapter extends ArrayAdapter<Task> {
     public taskList_adapter(Context context, List<Task> tasks){
         super(context,0,new ArrayList<>(tasks));
     }
-
 
 
     @NonNull
@@ -38,10 +38,25 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         }
 
         binding.taskTitle.setText(task.getName());
-
+        binding.taskTime.setText(task.getElapsedTimeToString());
+        binding.completeButton.setOnClickListener(v->{
+            binding.taskTime.setText(task.complete());
+            binding.completeButton.setEnabled(false);
+            binding.skipButton.setEnabled(false);
+        });
+        binding.skipButton.setOnClickListener(v->{
+            task.skip();
+            binding.completeButton.setEnabled(false);
+            binding.skipButton.setEnabled(false);
+        });
 
 
         return binding.getRoot();
 
     }
+
 }
+
+
+
+// System.currentTimeMills()/1000

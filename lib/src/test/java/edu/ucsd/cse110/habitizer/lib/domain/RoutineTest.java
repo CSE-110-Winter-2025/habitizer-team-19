@@ -108,7 +108,7 @@ public class RoutineTest{
                 add(new Task("Shower"));
             }
         };
-        tasks.get(0).complete(3);
+        tasks.get(0).complete();
         tasks.get(1).skip();
 
         Routine routine = new Routine("Morning", 60*60, tasks);
