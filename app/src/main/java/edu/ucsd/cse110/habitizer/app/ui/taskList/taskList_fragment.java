@@ -65,6 +65,8 @@ public class taskList_fragment extends Fragment{
 
             this.adapter = new taskList_adapter(requireContext(), List.of());
 
+            activityModel.setSelectedRoutine(selectedRoutine);
+
 
             activityModel.getTasks(selectedRoutine).observe(tasks -> {
                 if (tasks == null) return;

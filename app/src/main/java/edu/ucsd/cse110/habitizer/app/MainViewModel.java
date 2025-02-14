@@ -22,6 +22,7 @@ public class MainViewModel extends ViewModel {
     // Insert States:
     private final RoutineRepository routineRepository;
 
+    private String selecetedRoutine = "";
 
     //
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -53,5 +54,15 @@ public class MainViewModel extends ViewModel {
         var repository = new Subject<RoutineRepository>();
         repository.setValue(routineRepository);
         return repository;
+    }
+
+    public void pushTask (Task task) {
+        var routine = routineRepository.find(selecetedRoutine);
+        assert routine.getValue() != null;
+        routine.getValue().addTask(task);
+    }
+
+    public void setSelectedRoutine(String selectedRoutine) {
+        this.selecetedRoutine = selectedRoutine;
     }
 }

@@ -82,8 +82,6 @@ public class RoutineRepository {
         setHasStarted(0);
     }
 
-
-
     public Timer getTimer(){
         return timer;
     }
