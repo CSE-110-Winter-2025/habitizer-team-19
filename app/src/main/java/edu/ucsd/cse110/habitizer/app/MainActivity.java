@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.habitizer.app;
 
+import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.rM;
+
 import android.os.Bundle;
 
 import android.view.MenuItem;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             swapFragmentRoutineList();
-//            onBackPressed();
+            rM.resetRoutines();
             return true;
         }
         return super.onOptionsItemSelected(item);

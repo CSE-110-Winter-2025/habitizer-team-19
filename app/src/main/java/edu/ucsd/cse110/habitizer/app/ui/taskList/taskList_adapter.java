@@ -20,6 +20,12 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class taskList_adapter extends ArrayAdapter<Task> {
 
+    private boolean buttonsEnabled = false;
+
+    public void setButtonsEnabled(boolean enabled){
+        this.buttonsEnabled = enabled;
+        notifyDataSetChanged();
+    }
 
     public taskList_adapter(Context context, List<Task> tasks){
         super(context,0,new ArrayList<>(tasks));
@@ -41,11 +47,14 @@ public class taskList_adapter extends ArrayAdapter<Task> {
             binding = ListItemTaskBinding.inflate(layoutInflater, parent, false);
         }
 
+        binding.completeButton.setEnabled(buttonsEnabled);
+        binding.skipButton.setEnabled(buttonsEnabled);
+
         binding.taskTitle.setText(task.getName());
         binding.taskTime.setText(task.getElapsedTimeToString());
         binding.completeButton.setOnClickListener(v->{
             task.complete();
-            rM.setPrevTime(task);
+            rM.setElapsedTime(task);
             binding.taskTime.setText(task.getElapsedTimeToString());
             binding.completeButton.setEnabled(false);
             binding.skipButton.setEnabled(false);

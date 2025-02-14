@@ -15,6 +15,26 @@ public class RoutineRepository {
     private final InMemoryDataSource dataSource;
     private final Timer timer;
 
+    private boolean hasStarted = false;
+
+    public void setHasStarted(boolean started){
+        this.hasStarted = started;
+    }
+
+    public boolean getHasStarted(){
+        return this.hasStarted;
+    }
+
+    public void start(){
+        startTimer();
+        setHasStarted(true);
+    }
+
+    public void end(){
+        endTimer();;
+        setHasStarted(false);
+    }
+
     public RoutineRepository(InMemoryDataSource dataSource) {
         this.dataSource = dataSource;
         this.timer = new Timer();
@@ -40,17 +60,27 @@ public class RoutineRepository {
         timer.startTimer();
     }
 
+    public void endTimer(){
+        timer.endTimer();
+    }
+
     public long getElapsedTime() {
         return timer.getElapsedTime();
     }
-    /*
-    public long getTimeDifference(long seconds) {
-        return seconds - ;
-    }
-    */
-    public void setPrevTime(Task task){
+
+    public void setElapsedTime(Task task){
         task.setElapsedTime(timer.getElapsedTime());
     }
+
+    public void resetRoutines(){
+        dataSource.getAllRoutinesSubject().observe(routines -> {
+            assert routines != null;
+            for (Routine routine : routines) {
+                routine.reset();
+            }
+        });
+    }
+
 
 
     public Timer getTimer(){

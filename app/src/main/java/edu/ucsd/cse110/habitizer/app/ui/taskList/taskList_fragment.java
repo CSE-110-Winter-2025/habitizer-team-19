@@ -81,10 +81,17 @@ public class taskList_fragment extends Fragment{
                              Bundle savedInstanceState) {
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
         view.taskList.setAdapter(adapter);
-
+        
         view.StartRoutineButton.setOnClickListener(v -> {
-            rM.startTimer();
-            view.StartRoutineButton.setText("End Routine");
+            if(rM.getHasStarted()){
+                rM.end();
+                adapter.setButtonsEnabled(false);
+                view.StartRoutineButton.setText("Start Routine");
+            } else{
+                rM.start();
+                adapter.setButtonsEnabled(true);
+                view.StartRoutineButton.setText("End Routine");
+            }
         });
         return view.getRoot();
 
