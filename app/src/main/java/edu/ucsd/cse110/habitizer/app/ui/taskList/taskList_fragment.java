@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.taskList;
 
+import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.*;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,8 +14,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ucsd.cse110.habitizer.app.MainActivity;
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.util.Observer;
@@ -78,7 +82,14 @@ public class taskList_fragment extends Fragment{
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
         view.taskList.setAdapter(adapter);
 
+        view.StartRoutineButton.setOnClickListener(v -> {
+            rM.startTimer();
+            view.StartRoutineButton.setText("End Routine");
+        });
         return view.getRoot();
+
+
     }
+
 
 }
