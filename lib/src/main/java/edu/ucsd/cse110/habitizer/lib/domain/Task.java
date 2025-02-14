@@ -26,6 +26,10 @@ public class Task {
         return this.elapsedTime;
     }
 
+    public void setElapsedTime(long elapsedTime){
+        this.elapsedTime = elapsedTime;
+    }
+
     public String getElapsedTimeToString() {
         if(elapsedTime == -1){
             return "--:--:--";
@@ -47,11 +51,9 @@ public class Task {
     }
 
      */
-    
-    public String complete(){
 
+    public void complete(){
         CompletionStatus = 1;
-        return getElapsedTimeToString();
     }
 
     public void skip(){

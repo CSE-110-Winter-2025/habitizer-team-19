@@ -48,6 +48,10 @@ public class RoutineRepository {
         return seconds - ;
     }
     */
+    public void setPrevTime(Task task){
+        timer.setPrevTime();
+        task.setElapsedTime(timer.getElapsedTime());
+    }
 
 
     public Timer getTimer(){

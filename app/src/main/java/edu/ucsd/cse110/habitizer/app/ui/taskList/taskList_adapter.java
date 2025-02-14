@@ -40,13 +40,13 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.taskTitle.setText(task.getName());
         binding.taskTime.setText(task.getElapsedTimeToString());
         binding.completeButton.setOnClickListener(v->{
-            binding.taskTime.setText(task.complete());
+            task.complete();
+            binding.taskTime.setText(task.getElapsedTimeToString());
             binding.completeButton.setEnabled(false);
             binding.skipButton.setEnabled(false);
         });
         binding.skipButton.setOnClickListener(v->{
             task.skip();
-            binding.completeButton.setEnabled(false);
             binding.skipButton.setEnabled(false);
         });
 

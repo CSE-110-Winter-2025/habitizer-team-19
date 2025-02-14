@@ -5,19 +5,38 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 public class Timer {
     private long startTime;
 
+    private long prevTime;
+
     public Timer(){
         this.startTime = 0;
+        this.prevTime = 0;
     }
 
     public void startTimer() {
         //Convert from the given milliseconds to seconds
         this.startTime = System.currentTimeMillis()/1000;
+        this.prevTime = 0;
+    }
+
+    public void endTimer(){
+        this.startTime = 0;
+        this.prevTime = 0;
     }
 
     public long getElapsedTime() {
         if (startTime == 0){
             return 0; //return 0 if the timer has not been started
         }
-        return (System.currentTimeMillis()/1000)-this.startTime;
+        return (System.currentTimeMillis()/1000)-prevTime;
     }
+
+    public void setPrevTime(){
+        this.prevTime = System.currentTimeMillis()/1000;;
+    }
+
+    public long getPrevTime(){
+        return this.prevTime;
+    }
+
+
 }
