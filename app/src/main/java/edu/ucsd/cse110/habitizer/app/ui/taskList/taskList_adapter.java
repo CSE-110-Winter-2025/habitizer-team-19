@@ -20,6 +20,7 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class taskList_adapter extends ArrayAdapter<Task> {
 
+
     public taskList_adapter(Context context, List<Task> tasks){
         super(context,0,new ArrayList<>(tasks));
     }
@@ -59,8 +60,5 @@ public class taskList_adapter extends ArrayAdapter<Task> {
 
     }
 
+
 }
-
-
-
-// System.currentTimeMills()/1000

@@ -49,7 +49,6 @@ public class RoutineRepository {
     }
     */
     public void setPrevTime(Task task){
-        timer.setPrevTime();
         task.setElapsedTime(timer.getElapsedTime());
     }
 

@@ -7,6 +7,7 @@ public class Timer {
 
     private long prevTime;
 
+
     public Timer(){
         this.startTime = 0;
         this.prevTime = 0;
@@ -15,7 +16,7 @@ public class Timer {
     public void startTimer() {
         //Convert from the given milliseconds to seconds
         this.startTime = System.currentTimeMillis()/1000;
-        this.prevTime = 0;
+        this.prevTime = System.currentTimeMillis()/1000;
     }
 
     public void endTimer(){
@@ -27,12 +28,16 @@ public class Timer {
         if (startTime == 0){
             return 0; //return 0 if the timer has not been started
         }
-        return (System.currentTimeMillis()/1000)-prevTime;
+        long elapsedTime = System.currentTimeMillis()/1000 - prevTime;
+        this.prevTime = System.currentTimeMillis()/1000;
+        return elapsedTime;
     }
 
-    public void setPrevTime(){
-        this.prevTime = System.currentTimeMillis()/1000;;
-    }
+//    public void setPrevTime(){
+//        this.prevTime = System.currentTimeMillis()/1000;
+//    }
+
+
 
     public long getPrevTime(){
         return this.prevTime;
