@@ -16,6 +16,7 @@ import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.lib.util.Observer;
 
 
 /**
@@ -60,12 +61,14 @@ public class taskList_fragment extends Fragment{
 
             this.adapter = new taskList_adapter(requireContext(), List.of());
 
+
             activityModel.getTasks(selectedRoutine).observe(tasks -> {
                 if (tasks == null) return;
                 adapter.clear();
                 adapter.addAll(new ArrayList<>(tasks)); // remember the mutable copy here!
                 adapter.notifyDataSetChanged();
             });
+
         }
     }
 

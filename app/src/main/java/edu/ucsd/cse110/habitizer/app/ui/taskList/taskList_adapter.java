@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.taskList;
 
+import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.*;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
+import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class taskList_adapter extends ArrayAdapter<Task> {
@@ -41,6 +44,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.taskTime.setText(task.getElapsedTimeToString());
         binding.completeButton.setOnClickListener(v->{
             task.complete();
+            rM.setPrevTime(task);
             binding.taskTime.setText(task.getElapsedTimeToString());
             binding.completeButton.setEnabled(false);
             binding.skipButton.setEnabled(false);
