@@ -40,7 +40,6 @@ public class Task {
     public int getCompletionStatus() {
         return this.CompletionStatus;
     }
-<<<<<<< Updated upstream
 
     /*
     public long getPrevTaskTime() {
@@ -48,11 +47,9 @@ public class Task {
     }
 
      */
-
-    public void complete(long time){
-=======
+    
     public String complete(){
->>>>>>> Stashed changes
+
         CompletionStatus = 1;
         return getElapsedTimeToString();
     }
