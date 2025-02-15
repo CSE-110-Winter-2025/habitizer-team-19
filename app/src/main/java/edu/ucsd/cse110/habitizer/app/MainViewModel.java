@@ -47,6 +47,7 @@ public class MainViewModel extends ViewModel {
     public Subject<List<Task>> getTasks(String routineName){
         var tasks = new Subject<List<Task>>();
         tasks.setValue(Objects.requireNonNull(routineRepository.find(routineName).getValue()).getTasks());
+        System.out.println("test");
         return tasks;
     }
 

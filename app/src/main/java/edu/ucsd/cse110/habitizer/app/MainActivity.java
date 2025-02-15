@@ -21,7 +21,7 @@ import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.createTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.taskList_fragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements createTaskDialogFragment.DialogListener {
 
     private boolean isTaskListFragmentVisible = false;
     private Toolbar toolbar;
@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private Menu mMenu;
     private boolean routineRunning = false;
 
+    private String selectedRoutine = null;
+
+
+
     private void updateBackButtonVisibility() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(isTaskListFragmentVisible);
         if(mMenu != null) {
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void swapFragmentTaskList(@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
         isTaskListFragmentVisible = true;
-
+        selectedRoutine = selectedRoutineTitle;
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, taskList_fragment.newInstance(selectedRoutineTitle))
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void swapFragmentRoutineList(){
         isTaskListFragmentVisible = false;
-
+        selectedRoutine = null;
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, routineList_fragment.newInstance())
@@ -120,5 +124,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onDialogPositiveClick() {
+        taskList_fragment fragment = (taskList_fragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment != null) {
+            fragment.refreshData(selectedRoutine);
+        }
+    }
 }
 

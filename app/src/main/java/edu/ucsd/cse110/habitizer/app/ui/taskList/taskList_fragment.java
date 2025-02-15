@@ -4,6 +4,7 @@ import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.*;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -105,5 +106,9 @@ public class taskList_fragment extends Fragment{
         return view.getRoot();
     }
 
-
+    public void refreshData(String routineName) {
+        adapter.clear();
+        adapter.addAll(new ArrayList<>(rM.find(routineName).getValue().getTasks())); // remember the mutable copy here!
+        adapter.notifyDataSetChanged();
+    }
 }

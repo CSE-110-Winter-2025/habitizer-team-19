@@ -69,5 +69,4 @@ public class taskList_adapter extends ArrayAdapter<Task> {
 
     }
 
-
 }
