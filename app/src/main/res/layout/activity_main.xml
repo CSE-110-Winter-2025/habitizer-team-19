@@ -42,7 +42,6 @@
                 tools:text="Subtitle" />
 
 
-
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>

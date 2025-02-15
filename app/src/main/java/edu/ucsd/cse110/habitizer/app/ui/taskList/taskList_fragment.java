@@ -88,6 +88,7 @@ public class taskList_fragment extends Fragment{
             if(rM.getHasStarted() == 0){
                 rM.start();
                 adapter.setButtonsEnabled(true);
+                ((MainActivity) requireActivity()).setRoutineRunning(true);
                 view.StartRoutineButton.setText("End Routine");
             } else if(rM.getHasStarted() == 1){
                 rM.end();
@@ -95,14 +96,13 @@ public class taskList_fragment extends Fragment{
                 view.StartRoutineButton.setText("Return to Main Menu");
             } else if(rM.getHasStarted() == 2){
                 rM.resetRoutines();
+                ((MainActivity) requireActivity()).setRoutineRunning(false);
                 MainActivity mainActivity = (MainActivity) requireActivity();
 
                 mainActivity.swapFragmentRoutineList();
             }
         });
         return view.getRoot();
-
-
     }
 
 

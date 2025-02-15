@@ -4,6 +4,8 @@ import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.rM;
 
 import android.os.Bundle;
 
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import edu.ucsd.cse110.habitizer.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
+import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.createTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.taskList_fragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,11 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView toolbarSubtitle;
     private ActivityMainBinding view;
 
+    private Menu mMenu;
+    private boolean routineRunning = false;
+
     private void updateBackButtonVisibility() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(isTaskListFragmentVisible);
-
-
-
+        if(mMenu != null) {
+            mMenu.findItem(R.id.action_bar_add_task).setVisible(isTaskListFragmentVisible && !routineRunning);
+        }
     }
     public void swapFragmentTaskList(@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
         isTaskListFragmentVisible = true;
@@ -57,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
         toolbarTitle.setText("Routines");
         toolbarSubtitle.setVisibility(View.GONE);
+        updateBackButtonVisibility();
+    }
+
+    public void setRoutineRunning(boolean val) {
+        routineRunning = val;
         updateBackButtonVisibility();
     }
 
@@ -88,11 +99,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        mMenu = menu;
+        updateBackButtonVisibility();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             swapFragmentRoutineList();
             rM.resetRoutines();
             return true;
+        } else if (item.getItemId() == R.id.action_bar_add_task) {
+            var dialogFragment = createTaskDialogFragment.newInstance();
+            dialogFragment.show(getSupportFragmentManager(), "createTaskDialogFragment");
         }
         return super.onOptionsItemSelected(item);
     }

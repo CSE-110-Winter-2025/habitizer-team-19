@@ -16,6 +16,8 @@ import edu.ucsd.cse110.habitizer.app.databinding.FragmentDialogCreateTaskBinding
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class createTaskDialogFragment extends DialogFragment {
+
+
     private FragmentDialogCreateTaskBinding view;
 
     private MainViewModel activityModel;

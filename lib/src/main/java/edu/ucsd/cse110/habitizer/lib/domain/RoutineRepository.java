@@ -35,7 +35,7 @@ public class RoutineRepository {
         setHasStarted(2);
     }
 
-    public RoutineRepository(InMemoryDataSource dataSource) {
+    private RoutineRepository(InMemoryDataSource dataSource) {
         this.dataSource = dataSource;
         this.timer = new Timer();
     }
