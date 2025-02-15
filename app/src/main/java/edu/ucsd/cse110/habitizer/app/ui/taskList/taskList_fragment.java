@@ -18,6 +18,7 @@ import java.util.List;
 import edu.ucsd.cse110.habitizer.app.MainActivity;
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.confirmDeleteTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
@@ -64,7 +65,10 @@ public class taskList_fragment extends Fragment{
             var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
             this.activityModel = modelProvider.get(MainViewModel.class);
 
-            this.adapter = new taskList_adapter(requireContext(), List.of());
+            this.adapter = new taskList_adapter(requireContext(), List.of(), taskName -> {
+                var dialogFragment = confirmDeleteTaskDialogFragment.newInstance(taskName);
+                dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteTaskDialogFragment");
+            });
 
             activityModel.setSelectedRoutine(selectedRoutine);
 
@@ -88,6 +92,8 @@ public class taskList_fragment extends Fragment{
         view.StartRoutineButton.setOnClickListener(v -> {
             if(rM.getHasStarted() == 0){
                 rM.start();
+                adapter.setRemoveEnabled(false);
+                adapter.setTimerEnabled(true);
                 adapter.setButtonsEnabled(true);
                 ((MainActivity) requireActivity()).setRoutineRunning(true);
                 view.StartRoutineButton.setText("End Routine");

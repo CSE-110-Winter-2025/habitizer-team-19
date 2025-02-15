@@ -63,6 +63,11 @@ public class MainViewModel extends ViewModel {
         routine.getValue().addTask(task);
     }
 
+    public void removeTask(String name) {
+        assert routineRepository.find(selecetedRoutine).getValue() != null;
+        routineRepository.find(selecetedRoutine).getValue().removeTask(name);
+    }
+
     public void setSelectedRoutine(String selectedRoutine) {
         this.selecetedRoutine = selectedRoutine;
     }

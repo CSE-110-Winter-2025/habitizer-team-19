@@ -18,10 +18,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import edu.ucsd.cse110.habitizer.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
+import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.confirmDeleteTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.createTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.taskList_fragment;
 
-public class MainActivity extends AppCompatActivity implements createTaskDialogFragment.DialogListener {
+public class MainActivity extends AppCompatActivity implements createTaskDialogFragment.DialogListener, confirmDeleteTaskDialogFragment.DialogListener {
 
     private boolean isTaskListFragmentVisible = false;
     private Toolbar toolbar;
