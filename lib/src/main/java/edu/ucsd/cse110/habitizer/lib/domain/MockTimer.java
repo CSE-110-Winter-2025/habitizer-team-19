@@ -1,7 +1,10 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
+import javax.swing.CellEditor;
+
 public class MockTimer implements TimerInterface {
     private long elapsedTime;
+    private long startingTime;
     private boolean isRunning;
 
     public MockTimer(long initialTime) {
@@ -21,7 +24,9 @@ public class MockTimer implements TimerInterface {
 
     @Override
     public long getElapsedTime() {
-        return elapsedTime;
+        var taskTime = elapsedTime;
+        elapsedTime = 0;
+        return taskTime;
     }
 
     public boolean isRunning() {

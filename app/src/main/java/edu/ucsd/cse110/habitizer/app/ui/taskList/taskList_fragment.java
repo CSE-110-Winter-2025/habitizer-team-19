@@ -102,6 +102,7 @@ public class taskList_fragment extends Fragment{
                 adapter.setButtonsEnabled(false);
                 view.StartRoutineButton.setText("Return to Main Menu");
             } else if(rM.getHasStarted() == 2){
+                rM.resetToRealTimer();
                 rM.resetRoutines();
                 ((MainActivity) requireActivity()).setRoutineRunning(false);
                 MainActivity mainActivity = (MainActivity) requireActivity();
@@ -109,6 +110,22 @@ public class taskList_fragment extends Fragment{
                 mainActivity.swapFragmentRoutineList();
             }
         });
+
+        // Initially disable the Advance Time button
+        view.AdvanceTimerButton.setEnabled(false);
+
+        // Stop Real Timer and Switch to Mock Timer
+        view.StopTimerButton.setOnClickListener(v -> {
+            RoutineRepository.rM.switchToMockTimer();
+            view.AdvanceTimerButton.setEnabled(true);
+        });
+
+        // Manually Advance Time (only works in mock mode)
+        view.AdvanceTimerButton.setOnClickListener(v -> {
+            RoutineRepository.rM.advanceTime();
+        });
+
+
         return view.getRoot();
     }
 
