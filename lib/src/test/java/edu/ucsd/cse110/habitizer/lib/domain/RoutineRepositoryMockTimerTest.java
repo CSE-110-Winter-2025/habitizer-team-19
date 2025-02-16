@@ -10,7 +10,7 @@ public class RoutineRepositoryMockTimerTest {
     @Before
     public void setUp() {
         routineRepository = RoutineRepository.rM;
-        routineRepository.resetToRealTimer(); // Reset before every test
+        routineRepository.resetToRealTimer();
         routineRepository.switchToMockTimer();
     }
 
@@ -31,16 +31,23 @@ public class RoutineRepositoryMockTimerTest {
     public void testRoutineElapsedTimeRounding() {
         routineRepository.advanceTime();
         routineRepository.advanceTime();
-        routineRepository.advanceTime(); // Total: 90 sec (1m30s)
+        routineRepository.advanceTime();
 
-        long roundedTime = (routineRepository.getElapsedTime() + 59) / 60; // Round up
-        assertEquals(2, roundedTime); // Should round to "2m"
+        long roundedTime = (routineRepository.getElapsedTime() + 59) / 60;
+        assertEquals(2, roundedTime);
     }
 
     @Test
     public void testAdvanceTimeFailsWhenTimerNotRunning() {
-        routineRepository.end(); // Stop the timer
+        routineRepository.end();
         routineRepository.advanceTime();
-        assertEquals(0, routineRepository.getElapsedTime()); // Elapsed time should not change
+        assertEquals(0, routineRepository.getElapsedTime());
+    }
+
+    @Test
+    public void testResetTimerElapsedTime() {
+        routineRepository.advanceTime();
+        routineRepository.getElapsedTime();
+        assertEquals(0, routineRepository.getElapsedTime());
     }
 }
