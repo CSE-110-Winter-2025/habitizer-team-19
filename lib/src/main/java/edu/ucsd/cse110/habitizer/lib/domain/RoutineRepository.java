@@ -7,22 +7,26 @@ import java.util.List;
 
 import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
+import edu.ucsd.cse110.habitizer.lib.domain.MockTimer;
 
 public class RoutineRepository {
 
     public static final RoutineRepository rM = new RoutineRepository(InMemoryDataSource.fromDefault());
 
     private final InMemoryDataSource dataSource;
-    private final Timer timer;
+    private TimerInterface timer;
 
     private int hasStarted = 0;
 
-    public void setHasStarted(int started){
-        this.hasStarted = started;
+    public RoutineRepository(InMemoryDataSource dataSource) {
+        this.dataSource = dataSource;
+        this.timer = new Timer();
     }
 
-    public int getHasStarted(){
-        return this.hasStarted;
+    public void switchToMockTimer() {
+        long currentTime = timer.getElapsedTime();
+        this.timer = new MockTimer(currentTime);
+        this.timer.startTimer();
     }
 
     public void start(){
@@ -35,9 +39,12 @@ public class RoutineRepository {
         setHasStarted(2);
     }
 
-    private RoutineRepository(InMemoryDataSource dataSource) {
-        this.dataSource = dataSource;
-        this.timer = new Timer();
+    public void setHasStarted(int started){
+        this.hasStarted = started;
+    }
+
+    public int getHasStarted(){
+        return this.hasStarted;
     }
 
     public Integer count() {
@@ -82,7 +89,7 @@ public class RoutineRepository {
         setHasStarted(0);
     }
 
-    public Timer getTimer(){
+    public TimerInterface getTimer(){
         return timer;
     }
 }

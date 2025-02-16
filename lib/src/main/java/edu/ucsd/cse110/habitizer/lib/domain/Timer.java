@@ -2,7 +2,7 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 
 //Getting Time logic: https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
 
-public class Timer {
+public class Timer implements TimerInterface {
     private long startTime;
 
     private long prevTime;
@@ -37,11 +37,8 @@ public class Timer {
 //        this.prevTime = System.currentTimeMillis()/1000;
 //    }
 
-
-
     public long getPrevTime(){
         return this.prevTime;
     }
-
 
 }
