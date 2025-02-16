@@ -40,8 +40,9 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
 
     private void updateBackButtonVisibility() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(isTaskListFragmentVisible);
-        if(mMenu != null) {
-            mMenu.findItem(R.id.action_bar_add_task).setVisible(isTaskListFragmentVisible && !routineRunning);
+        if (mMenu != null) {
+            boolean shouldShowAddButton = isTaskListFragmentVisible && !routineRunning;
+            mMenu.findItem(R.id.action_bar_add_task).setVisible(shouldShowAddButton || selectedRoutine != null);
         }
     }
     public void swapFragmentTaskList(@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
         toolbarTitle.setText(selectedRoutineTitle);
         toolbarSubtitle.setVisibility(View.VISIBLE);
         toolbarSubtitle.setText(selectedRoutineGoalTime);
+        if (mMenu != null) {
+            mMenu.findItem(R.id.action_bar_add_task).setVisible(true);
+        }
+
         updateBackButtonVisibility();
     }
 

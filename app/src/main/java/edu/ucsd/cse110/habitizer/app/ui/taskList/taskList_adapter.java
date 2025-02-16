@@ -14,6 +14,11 @@ import androidx.core.util.Consumer;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.widget.EditText;
+import android.widget.Toast;
+
+
 import edu.ucsd.cse110.habitizer.app.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
@@ -95,6 +100,30 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.taskDeleteButton.setVisibility(removeEnabled ? View.VISIBLE : View.GONE);
 
         binding.taskTitle.setText(task.getName());
+
+        binding.taskTitle.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Rename Task");
+
+            final EditText input = new EditText(getContext());
+            input.setText(task.getName()); // Pre-fill with the current name
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String newName = input.getText().toString().trim();
+                if (!newName.isEmpty() && !newName.equals(task.getName())) {
+                    task.newName(newName);
+                    notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "Invalid name", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            builder.show();
+        });
+
         binding.taskTime.setText(task.getElapsedTimeToString());
         binding.completeButton.setOnClickListener(v->{
             task.complete();

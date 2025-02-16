@@ -88,6 +88,7 @@ public class taskList_fragment extends Fragment{
                              Bundle savedInstanceState) {
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
         view.taskList.setAdapter(adapter);
+        view.StopTimerButton.setEnabled(false);
 
         adapter.setOnTaskComplete(totalTime -> {
             view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getRoutineDisplayTimeToString());
@@ -99,13 +100,15 @@ public class taskList_fragment extends Fragment{
                 rM.end();
                 adapter.setButtonsEnabled(false);
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
-                view.StartRoutineButton.setText("Return to Main Menu");
+                view.StartRoutineButton.setText("Ended Routine");
+                view.StartRoutineButton.setEnabled(false);
             }
         });
 
         view.StartRoutineButton.setOnClickListener(v -> {
             if(rM.getHasStarted() == 0){
                 rM.start();
+                view.StopTimerButton.setEnabled(true);
                 adapter.setRemoveEnabled(false);
                 adapter.setTimerEnabled(true);
                 adapter.setButtonsEnabled(true);
@@ -115,8 +118,10 @@ public class taskList_fragment extends Fragment{
                 rM.end();
                 adapter.setButtonsEnabled(false);
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
-                view.StartRoutineButton.setText("Return to Main Menu");
-            } else if(rM.getHasStarted() == 2){
+                view.StartRoutineButton.setText("Ended Routine");
+                view.StartRoutineButton.setEnabled(false);
+            }
+            else if(rM.getHasStarted() == 2){
                 rM.resetToRealTimer();
                 rM.resetRoutines();
                 ((MainActivity) requireActivity()).setRoutineRunning(false);
