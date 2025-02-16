@@ -15,6 +15,10 @@ public class RoutineRepository {
 
     private final InMemoryDataSource dataSource;
     private TimerInterface timer;
+    private long totalElapsedTime = 0;
+
+    private long routineDisplayTime = 0;
+
 
     private int hasStarted = 0;
 
@@ -32,6 +36,8 @@ public class RoutineRepository {
     public void resetToRealTimer() {
         this.timer = new Timer();  // Reset to real timer
         this.hasStarted = 0;       // Reset routine state
+        totalElapsedTime = 0;
+        routineDisplayTime = 0;
     }
 
 
@@ -79,6 +85,45 @@ public class RoutineRepository {
 
     public long getElapsedTime() {
         return timer.getElapsedTime();
+    }
+
+    public void completeTask(Task task) {
+        long elapsedTime = timer.getElapsedTime();
+        totalElapsedTime += elapsedTime;
+        long roundedTaskTime = ((elapsedTime + 59) / 60) * 60;
+        routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
+        task.setElapsedTime(roundedTaskTime);
+    }
+
+    public long getTotalElapsedTime() {
+        return totalElapsedTime;
+    }
+
+    public String getRoutineDisplayTimeToString() {
+        if (routineDisplayTime <= 0) {
+            return "--:--:--";
+        }
+        long hours = routineDisplayTime / 3600;
+        long minutes = (routineDisplayTime % 3600) / 60;
+        long seconds = routineDisplayTime % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public String getTotalElapsedTimeToString() {
+        if (totalElapsedTime <= 0) {
+            return "--:--:--";
+        }
+        long roundedTime = ((totalElapsedTime + 59) / 60) * 60;
+        long hours = roundedTime / 3600;
+        long minutes = (roundedTime % 3600) / 60;
+        long seconds = roundedTime % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+
+
+    public long getRoundedRoutineElapsedTime(long elapsedTime) {
+        return (elapsedTime / 60) * 60;
     }
 
     public void setElapsedTime(Task task){

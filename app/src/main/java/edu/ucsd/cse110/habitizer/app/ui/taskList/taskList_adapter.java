@@ -27,6 +27,34 @@ public class taskList_adapter extends ArrayAdapter<Task> {
 
     Consumer<String> onDeleteClick;
 
+    private Consumer<Long> onTaskComplete;
+
+    private Runnable onAllTasksDone;
+
+    public void setOnAllTasksDone(Runnable onAllTasksDone) {
+        this.onAllTasksDone = onAllTasksDone;
+    }
+
+    public void setOnTaskComplete(Consumer<Long> onTaskComplete) {
+        this.onTaskComplete = onTaskComplete;
+    }
+
+    private void checkAllTasksDone() {
+        // If *any* task is still not completed or skipped, return early
+        for (int i = 0; i < getCount(); i++) {
+            Task t = getItem(i);
+            if (t.getCompletionStatus() == 0) {
+                return; // Means at least one task is still "in progress"
+            }
+        }
+
+        // If we reach here, all tasks are done (either completed or skipped)
+        if (onAllTasksDone != null) {
+            onAllTasksDone.run();
+        }
+    }
+
+
     public void setRemoveEnabled(boolean enabled){
         this.removeEnabled = enabled;
     }
@@ -59,6 +87,8 @@ public class taskList_adapter extends ArrayAdapter<Task> {
             binding = ListItemTaskBinding.inflate(layoutInflater, parent, false);
         }
 
+
+
         binding.completeButton.setVisibility(buttonsEnabled ? View.VISIBLE : View.GONE);
         binding.skipButton.setVisibility(buttonsEnabled ? View.VISIBLE : View.GONE);
         binding.taskTime.setVisibility(timerEnabled ? View.VISIBLE : View.GONE);
@@ -68,21 +98,28 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.taskTime.setText(task.getElapsedTimeToString());
         binding.completeButton.setOnClickListener(v->{
             task.complete();
-            rM.setElapsedTime(task);
+            // rM.setElapsedTime(task);
+            rM.completeTask(task);
             binding.taskTime.setText(task.getElapsedTimeToString());
+            binding.taskTime.setVisibility(timerEnabled ? View.VISIBLE : View.GONE);
             binding.completeButton.setEnabled(false);
             binding.skipButton.setEnabled(false);
+
+            if (onTaskComplete != null) {
+                onTaskComplete.accept(rM.getTotalElapsedTime());
+            }
+            checkAllTasksDone();
         });
         binding.skipButton.setOnClickListener(v->{
             task.skip();
             binding.skipButton.setEnabled(false);
+            checkAllTasksDone();
         });
         binding.taskDeleteButton.setOnClickListener(v -> {
             var name = task.getName();
             onDeleteClick.accept(name);
             notifyDataSetChanged();
         });
-
 
         return binding.getRoot();
 

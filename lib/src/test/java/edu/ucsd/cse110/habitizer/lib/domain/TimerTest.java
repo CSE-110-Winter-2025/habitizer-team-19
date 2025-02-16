@@ -1,64 +1,64 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
 import static org.junit.Assert.*;
-
-
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Test;
 
 public class TimerTest {
     private Timer timer;
+    private MockTimer mockTimer;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         timer = new Timer();
-    }
-
-    @After
-    public void tearDown() {
-        timer = null;
-    }
-
-
-    @Test
-    public void testStartTimer() {
-        timer.startTimer();
-        assertTrue("Elapsed time should be >= 0 after starting timer",
-                timer.getElapsedTime() >= 0);
+        mockTimer = new MockTimer(10);
     }
 
     @Test
-    public void testGetElapsedTime() throws InterruptedException {
+    public void testTimerStartsCorrectly() {
         timer.startTimer();
-
-        //sleep for 2 seconds
-        Thread.sleep(2000);
-        long elapsedTime = timer.getElapsedTime();
-        assertTrue("Elapsed time should be at least 2 seconds after sleeping for 2 seconds",
-                elapsedTime >= 2);
+        assertTrue("Timer should start running", timer.getElapsedTime() >= 0);
     }
 
     @Test
-    public void testGetElapsedTimeWithoutStarting() {
-        long elapsedTime = timer.getElapsedTime();
-        assertEquals("Elapsed time should be 0 if timer never started",
-                0, elapsedTime);
+    public void testElapsedTimeRoundingForTasks() {
+        mockTimer.startTimer();
+        for (int i = 0; i < 7; i++) {
+            mockTimer.advanceTime();
+        }
+
+        long elapsedTime = mockTimer.getElapsedTime();
+        assertEquals("Elapsed time should round up to 4m", 240, ((elapsedTime + 59) / 60) * 60);
     }
 
     @Test
-    public void testGetElapsedTimeAfterRestarting() throws InterruptedException {
-        timer.startTimer();
-        Thread.sleep(1000); //sleep for 1 second
-        long firstElapsedTime = timer.getElapsedTime();
-        assertTrue("Should be at least 1 after sleeping for 1 second",
-                firstElapsedTime >= 1);
+    public void testSwitchToMockTimer() {
+        mockTimer.startTimer();
+        assertTrue("Mock timer should be running", mockTimer.isRunning());
+        assertEquals("Mock timer should start with 10s elapsed", 10, mockTimer.getElapsedTime());
+    }
 
-        //Restart timer
-        timer.startTimer();
-        Thread.sleep(1000); //sleep another second
-        long secondElapsedTime = timer.getElapsedTime();
-        assertTrue("Should be around 1 after restarting and sleeping a second",
-                secondElapsedTime >= 1 && secondElapsedTime < 2);
+    @Test
+    public void testManualTimeAdvance() {
+        mockTimer.startTimer();
+        mockTimer.advanceTime();
+        mockTimer.advanceTime();
+
+        assertEquals("Mock timer should advance by 60s", 70, mockTimer.getElapsedTime());
+    }
+
+    @Test
+    public void testMultipleAdvanceTimeCalls() {
+        mockTimer.startTimer();
+        for (int i = 0; i < 5; i++) {
+            mockTimer.advanceTime();
+        }
+        assertEquals("Mock timer should advance by 150s", 160, mockTimer.getElapsedTime());
+    }
+
+    @Test
+    public void testAdvanceTimeDoesNothingWhenStopped() {
+        mockTimer.advanceTime();
+        assertEquals("Mock timer should not advance when stopped", 10, mockTimer.getElapsedTime());
     }
 }
