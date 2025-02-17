@@ -44,8 +44,8 @@ public class TaskTest {
     }
 
     @Test
-    public void testNewName() {
-        task.newName("Updated Task");
+    public void testSetName() {
+        task.setName("Updated Task");
         assertEquals("Updated Task", task.getName());
     }
 

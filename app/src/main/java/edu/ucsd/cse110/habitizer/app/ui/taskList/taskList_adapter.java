@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 
 import edu.ucsd.cse110.habitizer.app.databinding.ListItemTaskBinding;
-import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class taskList_adapter extends ArrayAdapter<Task> {
@@ -110,7 +108,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
             builder.setPositiveButton("OK", (dialog, which) -> {
                 String newName = input.getText().toString().trim();
                 if (!newName.isEmpty() && !newName.equals(task.getName())) {
-                    task.newName(newName);
+                    task.setName(newName);
                     notifyDataSetChanged();
                 } else {
                     Toast.makeText(getContext(), "Invalid name", Toast.LENGTH_SHORT).show();
