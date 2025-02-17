@@ -45,15 +45,13 @@ public class taskList_adapter extends ArrayAdapter<Task> {
     }
 
     private void checkAllTasksDone() {
-        // If *any* task is still not completed or skipped, return early
         for (int i = 0; i < getCount(); i++) {
             Task t = getItem(i);
             if (t.getCompletionStatus() == 0) {
-                return; // Means at least one task is still "in progress"
+                return;
             }
         }
 
-        // If we reach here, all tasks are done (either completed or skipped)
         if (onAllTasksDone != null) {
             onAllTasksDone.run();
         }
@@ -106,7 +104,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
             builder.setTitle("Rename Task");
 
             final EditText input = new EditText(getContext());
-            input.setText(task.getName()); // Pre-fill with the current name
+            input.setText(task.getName());
             builder.setView(input);
 
             builder.setPositiveButton("OK", (dialog, which) -> {

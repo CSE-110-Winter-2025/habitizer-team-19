@@ -67,7 +67,6 @@ public class routineList_fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = FragmentRoutineListBinding.inflate(inflater, container, false);
         view.routineList.setAdapter(adapter);
 

@@ -34,8 +34,8 @@ public class RoutineRepository {
     }
 
     public void resetToRealTimer() {
-        this.timer = new Timer();  // Reset to real timer
-        this.hasStarted = 0;       // Reset routine state
+        this.timer = new Timer();
+        this.hasStarted = 0;
         totalElapsedTime = 0;
         routineDisplayTime = 0;
     }
