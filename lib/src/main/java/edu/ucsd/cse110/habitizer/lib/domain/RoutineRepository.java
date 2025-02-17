@@ -29,6 +29,12 @@ public class RoutineRepository {
         this.timer.startTimer();
     }
 
+    public void resetToRealTimer() {
+        this.timer = new Timer();  // Reset to real timer
+        this.hasStarted = 0;       // Reset routine state
+    }
+
+
     public void start(){
         startTimer();
         setHasStarted(1);
@@ -88,6 +94,13 @@ public class RoutineRepository {
         });
         setHasStarted(0);
     }
+
+    public void advanceTime() {
+        if(timer instanceof MockTimer) {
+            ((MockTimer) timer).advanceTime();
+        }
+    }
+
 
     public TimerInterface getTimer(){
         return timer;

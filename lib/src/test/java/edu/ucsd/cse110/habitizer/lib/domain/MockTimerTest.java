@@ -31,4 +31,28 @@ public class MockTimerTest {
         assertFalse(mockTimer.isRunning());
         assertEquals(10, mockTimer.getElapsedTime());
     }
+
+    @Test
+    public void testMockTimerAdvancesTimeCorrectly() {
+        mockTimer.startTimer();
+        mockTimer.advanceTime();
+        mockTimer.advanceTime();
+        assertEquals(70, mockTimer.getElapsedTime());
+
+    }
+
+    @Test
+    public void testMockTimerAdvanceFailsWhenStopped() {
+        mockTimer.advanceTime();
+        assertEquals(10, mockTimer.getElapsedTime());
+    }
+
+    @Test
+    public void testMockTimerMultipleAdvances() {
+        mockTimer.startTimer();
+        for (int i = 0; i < 5; i++) {
+            mockTimer.advanceTime();
+        }
+        assertEquals(160, mockTimer.getElapsedTime());
+    }
 }
