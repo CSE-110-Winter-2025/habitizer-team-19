@@ -12,26 +12,52 @@ import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class RoutineRepositoryTest {
 
-    private RoutineRepository setRoutineRepository(){
+//    private RoutineRepository setRoutineRepository(){
+//        var data = new InMemoryDataSource();
+//        List<Routine> routines = List.of(
+//                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
+//                        new Task("Brush Teeth"),
+//                        new Task("Shower")
+//                ))),
+//                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
+//                        new Task("Homework"),
+//                        new Task("Dinner")
+//                ))));
+//        for (Routine routine : routines) {
+//            data.putRoutine(routine);
+//        }
+//
+//        //return new RoutineRepository(data);
+//        return null;
+//    }
+
+
+    @Test
+    public void testCheckOffTaskAndRoundUpTime() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
-                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
+                new Routine("Morning", 60 * 60, new ArrayList<Task>(List.of(
                         new Task("Brush Teeth"),
                         new Task("Shower")
                 ))),
-                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
+                new Routine("Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
                         new Task("Homework"),
                         new Task("Dinner")
                 ))));
         for (Routine routine : routines) {
             data.putRoutine(routine);
         }
+        RoutineRepository rM = new RoutineRepository(data);
+        MockTimer mockTimer = new MockTimer(40);
 
-        return new RoutineRepository(data);
+        mockTimer.advanceTime();
+        //rM.completeTask(routines.get(0).getTasks().getFirst());
+
+
     }
 
 
-    @Test
+        @Test
     public void testCount() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(

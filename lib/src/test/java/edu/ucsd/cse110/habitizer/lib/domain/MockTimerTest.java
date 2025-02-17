@@ -25,6 +25,15 @@ public class MockTimerTest {
     }
 
     @Test
+    public void testMockTimerAdvanceTimeOnceCorrectly() {
+        mockTimer.startTimer();
+        mockTimer.advanceTime();
+        mockTimer.endTimer();
+        assertFalse(mockTimer.isRunning());
+        assertEquals(40, mockTimer.getElapsedTime());
+    }
+
+    @Test
     public void testMockTimerEndsCorrectly() {
         mockTimer.startTimer();
         mockTimer.endTimer();
@@ -33,7 +42,7 @@ public class MockTimerTest {
     }
 
     @Test
-    public void testMockTimerAdvancesTimeCorrectly() {
+    public void testMockTimerAdvancesTimeTwiceCorrectly() {
         mockTimer.startTimer();
         mockTimer.advanceTime();
         mockTimer.advanceTime();
