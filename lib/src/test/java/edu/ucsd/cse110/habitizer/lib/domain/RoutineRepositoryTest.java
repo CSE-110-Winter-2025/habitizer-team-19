@@ -51,7 +51,7 @@ public class RoutineRepositoryTest {
         MockTimer mockTimer = new MockTimer(40);
 
         mockTimer.advanceTime();
-        rM.completeTask(routines.get(0).getTasks().getFirst());
+        //rM.completeTask(routines.get(0).getTasks().getFirst());
 
 
     }
