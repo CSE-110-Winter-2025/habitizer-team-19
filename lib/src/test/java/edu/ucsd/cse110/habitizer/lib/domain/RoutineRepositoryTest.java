@@ -74,7 +74,7 @@ public class RoutineRepositoryTest {
         RoutineRepository rM = new RoutineRepository(data);
 
         var actual = rM.getRoutineCount();
-        var expected = (Integer) 2;
+        var expected = (int) 2;
 
         assertEquals(expected,actual);
     }
