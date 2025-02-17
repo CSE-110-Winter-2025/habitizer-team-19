@@ -17,9 +17,8 @@ import edu.ucsd.cse110.habitizer.lib.util.Subject;
 public class Routine {
 
     private @NonNull String name;
-
     private long goalTimeSeconds;
-
+    private int totalTaskClicked = 0;
     private final @NonNull ArrayList<Task> tasks;
 
     public Routine(@NonNull String name, long goalTimeSeconds, @NonNull ArrayList<Task> tasks){

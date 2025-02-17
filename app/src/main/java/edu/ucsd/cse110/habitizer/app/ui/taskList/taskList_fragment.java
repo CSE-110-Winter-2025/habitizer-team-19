@@ -88,10 +88,27 @@ public class taskList_fragment extends Fragment{
                              Bundle savedInstanceState) {
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
         view.taskList.setAdapter(adapter);
+        view.StopTimerButton.setEnabled(false);
+
+        adapter.setOnTaskComplete(totalTime -> {
+            view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getRoutineDisplayTimeToString());
+        });
+
+        adapter.setOnAllTasksDone(() -> {
+            // Only do this if the routine is currently running
+            if (rM.getHasStarted() == 1) {
+                rM.end();
+                adapter.setButtonsEnabled(false);
+                view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
+                view.StartRoutineButton.setText("Ended Routine");
+                view.StartRoutineButton.setEnabled(false);
+            }
+        });
 
         view.StartRoutineButton.setOnClickListener(v -> {
             if(rM.getHasStarted() == 0){
                 rM.start();
+                view.StopTimerButton.setEnabled(true);
                 adapter.setRemoveEnabled(false);
                 adapter.setTimerEnabled(true);
                 adapter.setButtonsEnabled(true);
@@ -100,8 +117,11 @@ public class taskList_fragment extends Fragment{
             } else if(rM.getHasStarted() == 1){
                 rM.end();
                 adapter.setButtonsEnabled(false);
-                view.StartRoutineButton.setText("Return to Main Menu");
-            } else if(rM.getHasStarted() == 2){
+                view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
+                view.StartRoutineButton.setText("Ended Routine");
+                view.StartRoutineButton.setEnabled(false);
+            }
+            else if(rM.getHasStarted() == 2){
                 rM.resetToRealTimer();
                 rM.resetRoutines();
                 ((MainActivity) requireActivity()).setRoutineRunning(false);
@@ -118,13 +138,14 @@ public class taskList_fragment extends Fragment{
         view.StopTimerButton.setOnClickListener(v -> {
             RoutineRepository.rM.switchToMockTimer();
             view.AdvanceTimerButton.setEnabled(true);
+            view.StopTimerButton.setEnabled(false);
+
         });
 
         // Manually Advance Time (only works in mock mode)
         view.AdvanceTimerButton.setOnClickListener(v -> {
             RoutineRepository.rM.advanceTime();
         });
-
 
         return view.getRoot();
     }

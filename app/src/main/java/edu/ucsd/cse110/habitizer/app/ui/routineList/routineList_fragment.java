@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -52,7 +53,9 @@ public class routineList_fragment extends Fragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         this.activityModel = modelProvider.get(MainViewModel.class);
 
+       // this.adapter = new routineList_adapter(requireContext(), List.of());
         this.adapter = new routineList_adapter(requireContext(), List.of());
+
         activityModel.getRoutines().observe(routines -> {
             if (routines == null) return;
             adapter.clear();
@@ -63,8 +66,7 @@ public class routineList_fragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,
-                            @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+                             @Nullable Bundle savedInstanceState) {
         view = FragmentRoutineListBinding.inflate(inflater, container, false);
         view.routineList.setAdapter(adapter);
 
@@ -72,7 +74,7 @@ public class routineList_fragment extends Fragment {
             Routine selectedRoutine = adapter.getItem(position);
             if (selectedRoutine != null) {
                 String selectedRoutineTitle = selectedRoutine.getName();
-                String selectedRoutineGoalTime = selectedRoutine.getGoalTimeToString();
+                String selectedRoutineGoalTime = "Goal Time: " + selectedRoutine.getGoalTimeToString();
                 MainActivity mainActivity = (MainActivity) requireActivity();
 
                 mainActivity.swapFragmentTaskList(selectedRoutineTitle, selectedRoutineGoalTime);
