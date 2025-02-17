@@ -71,7 +71,7 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
                 String newTimeStr = input.getText().toString().trim();
                 if (isValidTimeFormat(newTimeStr)) {
                     long newTime = convertTimeStringToSeconds(newTimeStr);
-                    routine.newGoalTime(newTime);
+                    routine.setGoalTime(newTime);
                     notifyDataSetChanged();
                 } else {
                     Toast.makeText(getContext(), "Invalid time format (use HH:MM:SS)", Toast.LENGTH_SHORT).show();

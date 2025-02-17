@@ -2,17 +2,8 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 
 import androidx.annotation.NonNull;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-
-
 import java.util.Objects;
-
-import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class Routine {
 
@@ -21,74 +12,52 @@ public class Routine {
     private int totalTaskClicked = 0;
     private final @NonNull ArrayList<Task> tasks;
 
-    public Routine(@NonNull String name, long goalTimeSeconds, @NonNull ArrayList<Task> tasks){
+    public Routine(@NonNull String name, long goalTimeSeconds, @NonNull ArrayList<Task> tasks) {
         this.name = name;
         this.goalTimeSeconds = goalTimeSeconds;
         this.tasks = new ArrayList<>(tasks);
     }
 
-//    public void startRoutine(){
-//        timer.startTimer();
-//        for(Task task: tasks ){
-//            task.restartTimer();
-//        }
-//        isStarted = true;
-//    }
-//
-//    public void endRoutine(){
-//        if(!isStarted){
-//            throw new IllegalArgumentException("Ended before Start Routine.");
-//        }
-//        timer.endTimer();
-//        for(Task task: tasks ){
-//            if(!task.isCompleted() && !task.isSkipped()){
-//                task.skip();
-//            }
-//        }
-//
-//        actualTime = timer.calculateElapsedTime();
-//    }
-
-    public void addTask(Task task){
+    // Task Management
+    public void addTask(Task task) {
         tasks.add(task);
     }
 
-    public void removeTask(String name) {
-        tasks.removeIf(task -> Objects.equals(task.getName(), name));
+    public void removeTask(String taskName) {
+        tasks.removeIf(task -> Objects.equals(task.getName(), taskName));
     }
 
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    // Routine Properties
     @NonNull
     public String getName() {
         return name;
+    }
+
+    public void setName(@NonNull String newName) {
+        this.name = newName;
     }
 
     public long getGoalTime() {
         return goalTimeSeconds;
     }
 
-    public String getGoalTimeToString(){
-        var hours = goalTimeSeconds / 3600;
-        var minutes = (goalTimeSeconds % 3600) / 60;
-        var seconds = goalTimeSeconds % 60;
-
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    public void newGoalTime(long newTime) {
+    public void setGoalTime(long newTime) {
         this.goalTimeSeconds = newTime;
     }
 
-    public void newName(String newName) {
-        this.name = newName;
+    public String getGoalTimeToString() {
+        long hours = goalTimeSeconds / 3600;
+        long minutes = (goalTimeSeconds % 3600) / 60;
+        long seconds = goalTimeSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    // Reset Routine
     public void reset() {
-        for(Task task: tasks) {
-            task.reset();
-        }
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
+        tasks.forEach(Task::reset);
     }
 }

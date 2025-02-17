@@ -75,26 +75,26 @@ public class RoutineTest{
     }
 
     @Test
-    public void testNewGoalTime() {
+    public void testSetGoalTime() {
         Routine routine = new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
                 new Task("Brush Teeth"),
                 new Task("Shower")
         )));
         long goalTime = 60;
-        routine.newGoalTime(60);
+        routine.setGoalTime(60);
         var actual = routine.getGoalTime();
 
         assertEquals(goalTime,actual);
     }
 
     @Test
-    public void testNewName() {
+    public void testSetName() {
         Routine routine = new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
                 new Task("Brush Teeth"),
                 new Task("Shower")
         )));
         String name = "Night";
-        routine.newName("Night");
+        routine.setName("Night");
         var actual = routine.getName();
 
         assertEquals(name,actual);
