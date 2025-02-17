@@ -1,53 +1,44 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
-import java.time.Duration;
-import java.time.Instant;
+//Getting Time logic: https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
 
-public class Timer {
-    private Instant startTime;
+public class Timer implements TimerInterface {
+    private long startTime;
 
-    private Instant endTime;
+    private long prevTime;
 
-    private Time elapsedTime;
 
     public Timer(){
-        this.startTime = null;
-        this.endTime = null;
-        this.elapsedTime = null;
+        this.startTime = 0;
+        this.prevTime = 0;
     }
 
-    public Instant getStartTime() {
-        return startTime;
-    }
-
-    public Instant getEndTime() {
-        return endTime;
-    }
-
-    public void setStartTime(Instant startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Instant endTime) {
-        this.endTime = endTime;
-    }
-
-    public void startTimer(){
-        startTime = Instant.now();
+    public void startTimer() {
+        //Convert from the given milliseconds to seconds
+        this.startTime = System.currentTimeMillis()/1000;
+        this.prevTime = System.currentTimeMillis()/1000;
     }
 
     public void endTimer(){
-        endTime = Instant.now();
+        this.startTime = 0;
+        this.prevTime = 0;
     }
 
-    public Time calculateElapsedTime(){
-        if(startTime != null && endTime != null){
-            long elapsedSeconds = Duration.between(startTime, endTime).getSeconds();
-            elapsedTime = new Time(elapsedSeconds);
-            return elapsedTime;
-        } else{
-            throw new IllegalArgumentException("Timer did not work");
+    public long getElapsedTime() {
+        if (startTime == 0){
+            return 0; //return 0 if the timer has not been started
         }
+        long elapsedTime = System.currentTimeMillis()/1000 - prevTime;
+        this.prevTime = System.currentTimeMillis()/1000;
+        return elapsedTime;
+    }
+
+//    public void setPrevTime(){
+//        this.prevTime = System.currentTimeMillis()/1000;
+//    }
+
+    public long getPrevTime(){
+        return this.prevTime;
     }
 
 }
