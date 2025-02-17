@@ -4,7 +4,6 @@ import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.*;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,10 +18,7 @@ import edu.ucsd.cse110.habitizer.app.MainActivity;
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.confirmDeleteTaskDialogFragment;
-import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
-import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.util.Observer;
 
 
 /**
@@ -91,13 +87,13 @@ public class taskList_fragment extends Fragment{
         view.StopTimerButton.setEnabled(false);
 
         adapter.setOnTaskComplete(totalTime -> {
-            view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getRoutineDisplayTimeToString());
+            view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getRoutineElapsedTimeString());
         });
 
         adapter.setOnAllTasksDone(() -> {
             // Only do this if the routine is currently running
-            if (rM.getHasStarted() == 1) {
-                rM.end();
+            if (rM.getRoutineStatus() == 1) {
+                rM.endRoutine();
                 adapter.setButtonsEnabled(false);
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
@@ -108,16 +104,16 @@ public class taskList_fragment extends Fragment{
         });
 
         view.StartRoutineButton.setOnClickListener(v -> {
-            if(rM.getHasStarted() == 0){
-                rM.start();
+            if(rM.getRoutineStatus() == 0){
+                rM.startRoutine();
                 view.StopTimerButton.setEnabled(true);
                 adapter.setRemoveEnabled(false);
                 adapter.setTimerEnabled(true);
                 adapter.setButtonsEnabled(true);
                 ((MainActivity) requireActivity()).setRoutineRunning(true);
                 view.StartRoutineButton.setText("End Routine");
-            } else if(rM.getHasStarted() == 1){
-                rM.end();
+            } else if(rM.getRoutineStatus() == 1){
+                rM.endRoutine();
                 adapter.setButtonsEnabled(false);
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
@@ -125,9 +121,9 @@ public class taskList_fragment extends Fragment{
                 view.StopTimerButton.setEnabled(false);
                 view.AdvanceTimerButton.setEnabled(false);
             }
-            else if(rM.getHasStarted() == 2){
+            else if(rM.getRoutineStatus() == 2){
                 rM.resetToRealTimer();
-                rM.resetRoutines();
+                rM.resetAllRoutines();
                 ((MainActivity) requireActivity()).setRoutineRunning(false);
                 MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -156,7 +152,7 @@ public class taskList_fragment extends Fragment{
 
     public void refreshData(String routineName) {
         adapter.clear();
-        adapter.addAll(new ArrayList<>(rM.find(routineName).getValue().getTasks())); // remember the mutable copy here!
+        adapter.addAll(new ArrayList<>(rM.findRoutine(routineName).getValue().getTasks())); // remember the mutable copy here!
         adapter.notifyDataSetChanged();
     }
 }

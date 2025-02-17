@@ -39,7 +39,7 @@ public class RoutineRepositoryMockTimerTest {
 
     @Test
     public void testAdvanceTimeFailsWhenTimerNotRunning() {
-        routineRepository.end();
+        routineRepository.endRoutine();
         routineRepository.advanceTime();
         assertEquals(0, routineRepository.getElapsedTime());
     }
