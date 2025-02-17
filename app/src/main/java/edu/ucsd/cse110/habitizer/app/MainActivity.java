@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
         if (item.getItemId() == android.R.id.home) {
             swapFragmentRoutineList();
             rM.resetRoutines();
+            rM.resetToRealTimer();
             return true;
         } else if (item.getItemId() == R.id.action_bar_add_task) {
             var dialogFragment = createTaskDialogFragment.newInstance();
