@@ -67,31 +67,7 @@ public class InMemoryDataSource {
                     new Task("Wash Dishes"),
                     new Task("Pack Bag"),
                     new Task("Sleep")
-            ))),
-
-            new Routine("Test Routine 1", 60*60, new ArrayList<Task>(List.of(
-                    new Task("Task 1"),
-                    new Task("Task 2"),
-                    new Task("Task 3"),
-                    new Task("Task 4"),
-                    new Task("Task 5"),
-                    new Task("Task 6"),
-                    new Task("Task 7"),
-                    new Task("Task 8"),
-                    new Task("Task 9"),
-                    new Task("Task 10"),
-                    new Task("Task 11"),
-                    new Task("Task 12"),
-                    new Task("Task 13"),
-                    new Task("Task 14"),
-                    new Task("Task 15"),
-                    new Task("Task 16"),
-                    new Task("Task 17"),
-                    new Task("Task 18"),
-                    new Task("Task 19"),
-                    new Task("Task 20")
             )))
-
     );
 
 
