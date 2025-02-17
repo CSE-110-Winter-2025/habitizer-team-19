@@ -42,6 +42,8 @@ public class RoutineRepository {
 
 
     public void start(){
+        totalElapsedTime = 0;  // Reset elapsed time when starting a new routine
+        routineDisplayTime = 0;  // Reset routine display time
         startTimer();
         setHasStarted(1);
     }
@@ -76,6 +78,7 @@ public class RoutineRepository {
     }
 
     public void startTimer() {
+        this.timer = new Timer();
         timer.startTimer();
     }
 

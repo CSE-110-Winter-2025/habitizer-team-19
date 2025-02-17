@@ -102,6 +102,8 @@ public class taskList_fragment extends Fragment{
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
+                view.StopTimerButton.setEnabled(false);
+                view.AdvanceTimerButton.setEnabled(false);
             }
         });
 
@@ -120,6 +122,8 @@ public class taskList_fragment extends Fragment{
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
+                view.StopTimerButton.setEnabled(false);
+                view.AdvanceTimerButton.setEnabled(false);
             }
             else if(rM.getHasStarted() == 2){
                 rM.resetToRealTimer();
