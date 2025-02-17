@@ -3,7 +3,6 @@ package edu.ucsd.cse110.habitizer.app;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
@@ -14,8 +13,6 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
-import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
-import edu.ucsd.cse110.habitizer.app.ui.taskList.taskList_fragment;
 
 public class MainViewModel extends ViewModel {
 
@@ -41,12 +38,12 @@ public class MainViewModel extends ViewModel {
     }
 
     public Subject<List<Routine>> getRoutines() {
-        return routineRepository.findAll();
+        return routineRepository.findAllRoutines();
     }
 
     public Subject<List<Task>> getTasks(String routineName){
         var tasks = new Subject<List<Task>>();
-        tasks.setValue(Objects.requireNonNull(routineRepository.find(routineName).getValue()).getTasks());
+        tasks.setValue(Objects.requireNonNull(routineRepository.findRoutine(routineName).getValue()).getTasks());
         System.out.println("test");
         return tasks;
     }
@@ -58,14 +55,14 @@ public class MainViewModel extends ViewModel {
     }
 
     public void pushTask (Task task) {
-        var routine = routineRepository.find(selecetedRoutine);
+        var routine = routineRepository.findRoutine(selecetedRoutine);
         assert routine.getValue() != null;
         routine.getValue().addTask(task);
     }
 
     public void removeTask(String name) {
-        assert routineRepository.find(selecetedRoutine).getValue() != null;
-        routineRepository.find(selecetedRoutine).getValue().removeTask(name);
+        assert routineRepository.findRoutine(selecetedRoutine).getValue() != null;
+        routineRepository.findRoutine(selecetedRoutine).getValue().removeTask(name);
     }
 
     public void setSelectedRoutine(String selectedRoutine) {

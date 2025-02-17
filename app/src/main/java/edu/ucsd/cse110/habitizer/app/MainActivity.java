@@ -5,7 +5,6 @@ import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.rM;
 import android.os.Bundle;
 
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             swapFragmentRoutineList();
-            rM.resetRoutines();
+            rM.resetAllRoutines();
             rM.resetToRealTimer();
             return true;
         } else if (item.getItemId() == R.id.action_bar_add_task) {

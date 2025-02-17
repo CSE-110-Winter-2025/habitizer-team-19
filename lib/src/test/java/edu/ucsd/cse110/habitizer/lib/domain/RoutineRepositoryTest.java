@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
-import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class RoutineRepositoryTest {
 
@@ -58,7 +57,7 @@ public class RoutineRepositoryTest {
 
 
         @Test
-    public void testCount() {
+    public void testGetRoutineCount() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
                 new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
@@ -74,14 +73,14 @@ public class RoutineRepositoryTest {
         }
         RoutineRepository rM = new RoutineRepository(data);
 
-        var actual = rM.count();
+        var actual = rM.getRoutineCount();
         var expected = (Integer) 2;
 
         assertEquals(expected,actual);
     }
 
     @Test
-    public void testFind() {
+    public void testFindRoutine() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
                 new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
@@ -97,7 +96,7 @@ public class RoutineRepositoryTest {
         }
         RoutineRepository rM = new RoutineRepository(data);
 
-        var actual = rM.find("Morning");
+        var actual = rM.findRoutine("Morning");
 
         var expected = data.getRoutineSubject("Morning");
 
@@ -105,7 +104,7 @@ public class RoutineRepositoryTest {
     }
 
     @Test
-    public void testFindAll() {
+    public void testFindRoutineAll() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
                 new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
@@ -121,7 +120,7 @@ public class RoutineRepositoryTest {
         }
         RoutineRepository rM = new RoutineRepository(data);
 
-        var actual = rM.findAll();
+        var actual = rM.findAllRoutines();
 
         var expected = data.getAllRoutinesSubject();
 
@@ -129,7 +128,7 @@ public class RoutineRepositoryTest {
     }
 
     @Test
-    public void testSave() {
+    public void testSaveRoutine() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
                 new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
@@ -149,8 +148,8 @@ public class RoutineRepositoryTest {
                 new Task("Eat Sandwich")
         )));
 
-        rM.save(routine);
-        var actual = rM.findAll();
+        rM.saveRoutine(routine);
+        var actual = rM.findAllRoutines();
 
         data.putRoutine(routine);
         var expected = data.getAllRoutinesSubject();

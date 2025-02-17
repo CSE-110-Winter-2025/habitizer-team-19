@@ -1,13 +1,8 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
-import androidx.annotation.NonNull;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
-import edu.ucsd.cse110.habitizer.lib.domain.MockTimer;
 
 public class RoutineRepository {
 
@@ -16,15 +11,22 @@ public class RoutineRepository {
     private final InMemoryDataSource dataSource;
     private TimerInterface timer;
     private long totalElapsedTime = 0;
-
     private long routineDisplayTime = 0;
-
-
     private int hasStarted = 0;
 
     public RoutineRepository(InMemoryDataSource dataSource) {
         this.dataSource = dataSource;
         this.timer = new Timer();
+    }
+
+    // Timer Management
+    public void startTimer() {
+        this.timer = new Timer();
+        timer.startTimer();
+    }
+
+    public void endTimer() {
+        timer.endTimer();
     }
 
     public void switchToMockTimer() {
@@ -40,56 +42,69 @@ public class RoutineRepository {
         routineDisplayTime = 0;
     }
 
-
-    public void start(){
-        totalElapsedTime = 0;  // Reset elapsed time when starting a new routine
-        routineDisplayTime = 0;  // Reset routine display time
-        startTimer();
-        setHasStarted(1);
-    }
-
-    public void end(){
-        endTimer();
-        setHasStarted(2);
-    }
-
-    public void setHasStarted(int started){
-        this.hasStarted = started;
-    }
-
-    public int getHasStarted(){
-        return this.hasStarted;
-    }
-
-    public Integer count() {
-        return dataSource.getRoutines().size();
-    }
-
-    public Subject<Routine> find(String name) {
-        return dataSource.getRoutineSubject(name);
-    }
-
-    public Subject<List<Routine>> findAll() {
-        return dataSource.getAllRoutinesSubject();
-    }
-
-    public void save(Routine routine) {
-        dataSource.putRoutine(routine);
-    }
-
-    public void startTimer() {
-        this.timer = new Timer();
-        timer.startTimer();
-    }
-
-    public void endTimer(){
-        timer.endTimer();
+    public void advanceTime() {
+        if (timer instanceof MockTimer) {
+            ((MockTimer) timer).advanceTime();
+        }
     }
 
     public long getElapsedTime() {
         return timer.getElapsedTime();
     }
 
+    public TimerInterface getTimer() {
+        return timer;
+    }
+
+    // Routine State Management
+    public void startRoutine() {
+        totalElapsedTime = 0;
+        routineDisplayTime = 0;
+        startTimer();
+        setRoutineStatus(1);
+    }
+
+    public void endRoutine() {
+        endTimer();
+        setRoutineStatus(2);
+    }
+
+    public void setRoutineStatus(int started) {
+        this.hasStarted = started;
+    }
+
+    public int getRoutineStatus() {
+        return this.hasStarted;
+    }
+
+    public void resetAllRoutines() {
+        dataSource.getAllRoutinesSubject().observe(routines -> {
+            assert routines != null;
+            for (Routine routine : routines) {
+                routine.reset();
+            }
+        });
+        setRoutineStatus(0);
+    }
+
+    // Routine Data Management
+    public int getRoutineCount() {
+        return dataSource.getRoutines().size();
+    }
+
+    public Subject<Routine> findRoutine(String name) {
+        return dataSource.getRoutineSubject(name);
+    }
+
+    public Subject<List<Routine>> findAllRoutines() {
+        return dataSource.getAllRoutinesSubject();
+    }
+
+    public void saveRoutine(Routine routine) {
+        dataSource.putRoutine(routine);
+    }
+
+    // Task Completion & Time Tracking
     public void completeTask(Task task) {
         long elapsedTime = timer.getElapsedTime();
         totalElapsedTime += elapsedTime;
@@ -98,11 +113,15 @@ public class RoutineRepository {
         task.setElapsedTime(roundedTaskTime);
     }
 
+    public void setElapsedTime(Task task) {
+        task.setElapsedTime(timer.getElapsedTime());
+    }
+
     public long getTotalElapsedTime() {
         return totalElapsedTime;
     }
 
-    public String getRoutineDisplayTimeToString() {
+    public String getRoutineElapsedTimeString() {
         if (routineDisplayTime <= 0) {
             return "--:--:--";
         }
@@ -123,34 +142,8 @@ public class RoutineRepository {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-
-
+    // Helper Methods
     public long getRoundedRoutineElapsedTime(long elapsedTime) {
         return (elapsedTime / 60) * 60;
-    }
-
-    public void setElapsedTime(Task task){
-        task.setElapsedTime(timer.getElapsedTime());
-    }
-
-    public void resetRoutines(){
-        dataSource.getAllRoutinesSubject().observe(routines -> {
-            assert routines != null;
-            for (Routine routine : routines) {
-                routine.reset();
-            }
-        });
-        setHasStarted(0);
-    }
-
-    public void advanceTime() {
-        if(timer instanceof MockTimer) {
-            ((MockTimer) timer).advanceTime();
-        }
-    }
-
-
-    public TimerInterface getTimer(){
-        return timer;
     }
 }
