@@ -9,12 +9,13 @@ import java.util.Objects;
 
 public class Routine {
 
+    // Data Field
     private final @Nullable Integer id;
     private final @NonNull String name;
     private final long goalTimeSeconds;
     private final @NonNull List<Task> tasks;
 
-
+    // Constructors
     public Routine(@NonNull String name, long goalTimeSeconds){
         this.id = null;
         this.name = name;
@@ -28,7 +29,7 @@ public class Routine {
         this.tasks = new ArrayList<>(tasks);
     }
 
-
+    //Getters and Setters
     public @NonNull Integer id(){
         assert id != null;
         return id;
@@ -39,6 +40,7 @@ public class Routine {
         return tasks;
     }
 
+    // Other Functions
     public void addTask(Task task){
         tasks.add(task);
     }
@@ -53,17 +55,8 @@ public class Routine {
         return new Routine(id,this.name,this.goalTimeSeconds,this.tasks);
     }
 
-    // Reset Routine
     public void reset() {
         tasks.forEach(Task::reset);
     }
 
-
-
-    //    public String getGoalTimeToString() {
-//        long hours = goalTimeSeconds / 3600;
-//        long minutes = (goalTimeSeconds % 3600) / 60;
-//        long seconds = goalTimeSeconds % 60;
-//        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-//    }
 }

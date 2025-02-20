@@ -11,20 +11,22 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
 public class InMemoryDataSource {
+
+    //Data Field
     private final Map<Integer, Routine> routines
             = new HashMap<>();
     private final Map<Integer, Subject<Routine>> routineSubjects
             = new HashMap<>();
     private final Subject<List<Routine>> allRoutinesSubject
             = new Subject<>();
+    private int nextRoutineId = 0;
+    private int nextTaskId = 0;
 
+    // Constructor
     public InMemoryDataSource() {
     }
 
-
-
-    private int nextRoutineId = 0;
-    private int nextTaskId = 0;
+    // Default Initialization
     public final static List<Routine> DEFAULT_ROUTINES = List.of(
             new Routine(1,"Morning", 45*60, new ArrayList<Task>(List.of(
                     new Task(1,"Shower"),
@@ -53,10 +55,7 @@ public class InMemoryDataSource {
         return data;
     }
 
-
-
-
-
+    //Getters and Setters
     public List<Routine> getRoutines() {
         return List.copyOf(routines.values());
     }
@@ -73,13 +72,12 @@ public class InMemoryDataSource {
         }
         return routineSubjects.get(id);
     }
-
     public Subject<List<Routine>> getAllRoutinesSubject() {
         return allRoutinesSubject;
     }
 
 
-
+    // Other Methods
     public void putRoutine(Routine routine) {
         var fixedRoutine = preInsert(routine);
         routines.put(fixedRoutine.id(),fixedRoutine);
@@ -151,6 +149,7 @@ public class InMemoryDataSource {
         allRoutinesSubject.setValue(getRoutines());
     }
 
+    // Setting ID private functions
     private Routine preInsert(Routine routine){
         var id = routine.id();
         if(id == null){
