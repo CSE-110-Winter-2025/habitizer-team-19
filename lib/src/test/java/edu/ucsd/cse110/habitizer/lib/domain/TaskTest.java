@@ -12,7 +12,7 @@ public class TaskTest {
     @Test
     public void testWithId(){
         Task task = new Task("Task 1");
-        task.withId(0);
+        task = task.withId(0);
 
         var actual = task.id();
         var expected = (Integer) 0;
