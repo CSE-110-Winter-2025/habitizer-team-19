@@ -3,6 +3,7 @@ package edu.ucsd.cse110.habitizer.app;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
@@ -10,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import edu.ucsd.cse110.habitizer.lib.domain.MockTimer;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.lib.domain.Timer;
 import edu.ucsd.cse110.habitizer.lib.domain.TimerInterface;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
 
@@ -54,6 +57,7 @@ public class MainViewModel extends ViewModel {
         this.currentRoutineState = new Subject<>();
         this.fragmentState = new Subject<>();
         this.currentTaskSubjects = new ArrayList<>();
+        this.timer = new Timer();
 
         //Initialize
         currentRoutineId.setValue(Integer.valueOf(-1));
@@ -94,6 +98,14 @@ public class MainViewModel extends ViewModel {
         return null;
     }
 
+    public Subject<List<Routine>> getRoutines() {
+        return routineRepository.findAllRoutines();
+    }
+
+    public void setCurrentRoutineId(Integer id){
+        currentRoutineId.setValue(id);
+    }
+
 
     // Update the task subjects for each task in the routine
     private void updateTaskSubjects(List<Task> tasks) {
@@ -105,7 +117,7 @@ public class MainViewModel extends ViewModel {
             currentTaskSubjects.add(taskSubject);
 
             // Now you can observe each individual task
-            taskSubject.observe(this::updateTaskUI);
+//            taskSubject.observe(this::updateTaskUI);
         }
     }
 
@@ -173,10 +185,126 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+    // Routine State Management
+    public void startRoutine() {
+        totalElapsedTime = 0;
+        routineDisplayTime = 0;
+        startTimer();
+        setRoutineStatus(1);
+    }
 
-//    public Subject<List<Routine>> getRoutines() {
-//        return routineRepository.findAllRoutines();
-//    }
+    public void endRoutine() {
+        endTimer();
+        setRoutineStatus(2);
+    }
+
+    public void setRoutineStatus(int started) {
+        this.hasStarted = started;
+    }
+
+    public int getRoutineStatus() {
+        return this.hasStarted;
+    }
+
+    public void resetAllRoutines() {
+        routineRepository.findAllRoutines().observe(routines -> {
+            assert routines != null;
+            for (Routine routine : routines) {
+                routine.reset();
+            }
+        });
+        setRoutineStatus(0);
+    }
+
+    // Timer Logic:
+    public void startTimer() {
+        this.timer = new Timer();
+        timer.startTimer();
+    }
+
+    public void endTimer() {
+        timer.endTimer();
+    }
+
+    public void switchToMockTimer() {
+        long currentTime = timer.getElapsedTime();
+        this.timer = new MockTimer(currentTime);
+        this.timer.startTimer();
+    }
+
+    public void resetToRealTimer() {
+        this.timer = new Timer();
+        this.hasStarted = 0;
+        totalElapsedTime = 0;
+        routineDisplayTime = 0;
+    }
+
+    public void advanceTime() {
+        if (timer instanceof MockTimer) {
+            ((MockTimer) timer).advanceTime();
+        }
+    }
+
+    public long getElapsedTime() {
+        return timer.getElapsedTime();
+    }
+
+    public TimerInterface getTimer() {
+        return timer;
+    }
+
+    // Task Completion & Time Tracking
+    public void completeTask(@NonNull Task task) {
+
+
+        long elapsedTime = getElapsedTime();
+        totalElapsedTime += elapsedTime;
+        long roundedTaskTime = ((elapsedTime + 59) / 60) * 60;
+        routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
+        task.setElapsedTime(roundedTaskTime);
+        task.setCompletionStatus(1);
+    }
+
+    public void skipTask(@NonNull Task task){
+        task.setCompletionStatus(2);
+    }
+
+    public void setElapsedTime(@NonNull Task task) {
+        task.setElapsedTime(timer.getElapsedTime());
+    }
+
+    public long getTotalElapsedTime() {
+        return totalElapsedTime;
+    }
+
+    public String getRoutineElapsedTimeString() {
+        if (routineDisplayTime <= 0) {
+            return "--:--:--";
+        }
+        long hours = routineDisplayTime / 3600;
+        long minutes = (routineDisplayTime % 3600) / 60;
+        long seconds = routineDisplayTime % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public String getTotalElapsedTimeToString() {
+        if (totalElapsedTime <= 0) {
+            return "--:--:--";
+        }
+        long roundedTime = ((totalElapsedTime + 59) / 60) * 60;
+        long hours = roundedTime / 3600;
+        long minutes = (roundedTime % 3600) / 60;
+        long seconds = roundedTime % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    // Helper Methods
+    public long getRoundedRoutineElapsedTime(long elapsedTime) {
+        return (elapsedTime / 60) * 60;
+    }
+
+
+
 //
 //    public Subject<List<Task>> getTasks(String routineName){
 //        var tasks = new Subject<List<Task>>();

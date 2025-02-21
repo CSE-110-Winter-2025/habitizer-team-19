@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import edu.ucsd.cse110.habitizer.app.MainActivity;
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
@@ -38,11 +39,11 @@ public class taskList_fragment extends Fragment{
         // Required empty public constructor
     }
 
-    public static taskList_fragment newInstance(String selectedRoutine) {
+    public static taskList_fragment newInstance(Integer id) {
         taskList_fragment fragment = new taskList_fragment();
         Bundle args = new Bundle();
 
-        args.putString("selectedRoutine", selectedRoutine);
+        args.putInt("routineId", id);
 
         fragment.setArguments(args);
         return fragment;
@@ -54,22 +55,22 @@ public class taskList_fragment extends Fragment{
 
 
         if(getArguments() != null){
-            String selectedRoutine = getArguments().getString("selectedRoutine");
+            Integer routineId = getArguments().getInt("routineId");
 
             var modelOwner = requireActivity();
             var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
             var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
             this.activityModel = modelProvider.get(MainViewModel.class);
 
-            this.adapter = new taskList_adapter(requireContext(), List.of(), taskName -> {
-                var dialogFragment = confirmDeleteTaskDialogFragment.newInstance(taskName);
+            this.adapter = new taskList_adapter(requireContext(), List.of(),activityModel, taskId -> {
+                var dialogFragment = confirmDeleteTaskDialogFragment.newInstance(taskId);
                 dialogFragment.show(getParentFragmentManager(), "ConfirmDeleteTaskDialogFragment");
             });
 
-            activityModel.setSelectedRoutine(selectedRoutine);
+            activityModel.setCurrentRoutineId(routineId);
 
 
-            activityModel.getTasks(selectedRoutine).observe(tasks -> {
+            activityModel.getCurrentRoutineTasks().observe(tasks -> {
                 if (tasks == null) return;
                 adapter.clear();
                 adapter.addAll(new ArrayList<>(tasks)); // remember the mutable copy here!
@@ -87,15 +88,15 @@ public class taskList_fragment extends Fragment{
         view.StopTimerButton.setEnabled(false);
 
         adapter.setOnTaskComplete(totalTime -> {
-            view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getRoutineElapsedTimeString());
+            view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getRoutineElapsedTimeString());
         });
 
         adapter.setOnAllTasksDone(() -> {
             // Only do this if the routine is currently running
-            if (rM.getRoutineStatus() == 1) {
-                rM.endRoutine();
+            if (activityModel.getRoutineStatus() == 1) {
+                activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
-                view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
+                view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
                 view.StopTimerButton.setEnabled(false);
@@ -104,26 +105,26 @@ public class taskList_fragment extends Fragment{
         });
 
         view.StartRoutineButton.setOnClickListener(v -> {
-            if(rM.getRoutineStatus() == 0){
-                rM.startRoutine();
+            if(activityModel.getRoutineStatus() == 0){
+                activityModel.startRoutine();
                 view.StopTimerButton.setEnabled(true);
                 adapter.setRemoveEnabled(false);
                 adapter.setTimerEnabled(true);
                 adapter.setButtonsEnabled(true);
                 ((MainActivity) requireActivity()).setRoutineRunning(true);
                 view.StartRoutineButton.setText("End Routine");
-            } else if(rM.getRoutineStatus() == 1){
-                rM.endRoutine();
+            } else if(activityModel.getRoutineStatus() == 1){
+                activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
-                view.TotalElapsedTime.setText("Total Elapsed Time: " + rM.getTotalElapsedTimeToString());
+                view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
                 view.StopTimerButton.setEnabled(false);
                 view.AdvanceTimerButton.setEnabled(false);
             }
-            else if(rM.getRoutineStatus() == 2){
-                rM.resetToRealTimer();
-                rM.resetAllRoutines();
+            else if(activityModel.getRoutineStatus() == 2){
+                activityModel.resetToRealTimer();
+                activityModel.resetAllRoutines();
                 ((MainActivity) requireActivity()).setRoutineRunning(false);
                 MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -136,7 +137,7 @@ public class taskList_fragment extends Fragment{
 
         // Stop Real Timer and Switch to Mock Timer
         view.StopTimerButton.setOnClickListener(v -> {
-            RoutineRepository.rM.switchToMockTimer();
+            activityModel.switchToMockTimer();
             view.AdvanceTimerButton.setEnabled(true);
             view.StopTimerButton.setEnabled(false);
 
@@ -144,15 +145,15 @@ public class taskList_fragment extends Fragment{
 
         // Manually Advance Time (only works in mock mode)
         view.AdvanceTimerButton.setOnClickListener(v -> {
-            RoutineRepository.rM.advanceTime();
+            activityModel.advanceTime();
         });
 
         return view.getRoot();
     }
 
-    public void refreshData(String routineName) {
+    public void refreshData() {
         adapter.clear();
-        adapter.addAll(new ArrayList<>(rM.findRoutine(routineName).getValue().getTasks())); // remember the mutable copy here!
+        adapter.addAll(new ArrayList<>(activityModel.getCurrentRoutineTasks().getValue())); // remember the mutable copy here!
         adapter.notifyDataSetChanged();
     }
 }

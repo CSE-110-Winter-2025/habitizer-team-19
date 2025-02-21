@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentDialogCreateTaskBinding;
-import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class confirmDeleteTaskDialogFragment extends DialogFragment {
     public interface DialogListener {
@@ -26,7 +25,9 @@ public class confirmDeleteTaskDialogFragment extends DialogFragment {
 
     private createTaskDialogFragment.DialogListener listener;
     private static final String ARG_TASK_NAME = "task_name";
-    private String taskName;
+    private static final String ARG_TASK_ID = "task_id";
+    private Integer taskId;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -42,10 +43,10 @@ public class confirmDeleteTaskDialogFragment extends DialogFragment {
 
     }
 
-    public static confirmDeleteTaskDialogFragment newInstance(String taskName) {
+    public static confirmDeleteTaskDialogFragment newInstance(Integer taskId) {
         var fragment = new confirmDeleteTaskDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_TASK_NAME, taskName);
+        args.putInt(ARG_TASK_ID, taskId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +67,7 @@ public class confirmDeleteTaskDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.taskName = requireArguments().getString(ARG_TASK_NAME);
+        this.taskId = requireArguments().getInt(ARG_TASK_ID);
         var modelOwner = requireActivity();
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
@@ -74,7 +75,7 @@ public class confirmDeleteTaskDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
-        activityModel.removeTask(taskName);
+        activityModel.removeTask(taskId);
         if (listener != null) {
             listener.onDialogPositiveClick(); // Notify the listener
         }

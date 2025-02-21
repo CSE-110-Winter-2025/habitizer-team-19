@@ -12,7 +12,7 @@ public class Routine {
     // Data Field
     private final @Nullable Integer id;
     private final @NonNull String name;
-    private final long goalTimeSeconds;
+    private long goalTimeSeconds;
     private final @NonNull List<Task> tasks;
 
     // Constructors
@@ -40,6 +40,10 @@ public class Routine {
         return tasks;
     }
 
+    public void setGoalTime(long newTime) {
+        this.goalTimeSeconds = newTime;
+    }
+
     // Other Functions
     public void addTask(Task task){
         tasks.add(task);
@@ -57,6 +61,14 @@ public class Routine {
 
     public void reset() {
         tasks.forEach(Task::reset);
+    }
+
+    // To String Method
+    public String getGoalTimeToString() {
+        long hours = goalTimeSeconds / 3600;
+        long minutes = (goalTimeSeconds % 3600) / 60;
+        long seconds = goalTimeSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
 }

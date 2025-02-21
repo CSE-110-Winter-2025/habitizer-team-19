@@ -82,7 +82,7 @@ public class routineList_fragment extends Fragment {
             String selectedRoutineTitle = selectedRoutine.getName();
             String selectedRoutineGoalTime = "Goal Time: " + selectedRoutine.getGoalTimeToString();
             MainActivity mainActivity = (MainActivity) requireActivity();
-            mainActivity.swapFragmentTaskList(selectedRoutineTitle, selectedRoutineGoalTime);
+            mainActivity.swapFragmentTaskList(selectedRoutine.id(),selectedRoutineTitle, selectedRoutineGoalTime);
         }
     }
 }

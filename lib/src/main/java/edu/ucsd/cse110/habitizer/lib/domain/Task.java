@@ -30,6 +30,9 @@ public class Task {
     public @Nullable Integer id(){return id;}
 
     public @NonNull String getName(){return name;}
+    public void setName(@NonNull String name){
+        this.name = name;
+    }
 
     public @NonNull Integer getCompletionStatus(){return completionStatus;}
     public void setCompletionStatus(Integer i){this.completionStatus = i;}
@@ -44,6 +47,20 @@ public class Task {
     public void reset(){
         this.completionStatus = 0;
         this.elapsedTime = -1;
+    }
+
+    // To String Methods
+
+    public String getElapsedTimeToString() {
+        return (elapsedTime == -1) ? "--:--:--" : formatElapsedTime(elapsedTime);
+    }
+
+    // Helper Methods
+    private String formatElapsedTime(long timeInSeconds) {
+        long hours = timeInSeconds / 3600;
+        long minutes = (timeInSeconds % 3600) / 60;
+        long seconds = timeInSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
 //    // Task Properties

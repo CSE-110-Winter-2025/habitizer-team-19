@@ -76,7 +76,7 @@ public class createTaskDialogFragment extends DialogFragment {
         var taskTitle = view.newTaskTitle.getText().toString();
 
         var task = new Task(taskTitle);
-        activityModel.pushTask(task);
+        activityModel.addTask(task);
         if (listener != null) {
             listener.onDialogPositiveClick(); // Notify the listener
         }
