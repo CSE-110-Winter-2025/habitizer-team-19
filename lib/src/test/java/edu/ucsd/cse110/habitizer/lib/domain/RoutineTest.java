@@ -78,7 +78,7 @@ public class RoutineTest{
     @Test
     public void testWithId(){
         Routine routine = new Routine("Morning", 60*60);
-        routine.withId(0);
+        routine = routine.withId(0);
 
         var actual = routine.id();
         var expected = (Integer) 0;
