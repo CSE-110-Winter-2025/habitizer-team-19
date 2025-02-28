@@ -28,7 +28,7 @@ public class InMemoryDataSource {
 
     // Default Initialization
     public final static List<Routine> DEFAULT_ROUTINES = List.of(
-            new Routine(1,"Morning", 45*60, new ArrayList<Task>(List.of(
+            new Routine("Morning", 45*60, new ArrayList<Task>(List.of(
                     new Task(1,"Shower"),
                     new Task(2,"Brush Teeth"),
                     new Task(3,"Dress"),
@@ -38,7 +38,7 @@ public class InMemoryDataSource {
                     new Task(7,"Pack Bag")
             ))),
 
-            new Routine(2,"Evening", 60*60*3, new ArrayList<Task>(List.of(
+            new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
                     new Task(8,"Charge Devices"),
                     new Task(9,"Preparing Dinner"),
                     new Task(10,"Eat Dinner"),

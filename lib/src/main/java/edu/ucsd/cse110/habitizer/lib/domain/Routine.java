@@ -28,10 +28,15 @@ public class Routine {
         this.goalTimeSeconds = goalTimeSeconds;
         this.tasks = new ArrayList<>(tasks);
     }
+    public Routine(@NonNull String name, long goalTimeSeconds, @NonNull List<Task> tasks) {
+        this.id = null;
+        this.name = name;
+        this.goalTimeSeconds = goalTimeSeconds;
+        this.tasks = new ArrayList<>(tasks);
+    }
 
     //Getters and Setters
-    public @NonNull Integer id(){
-        assert id != null;
+    public @Nullable Integer id(){
         return id;
     }
     public @NonNull String getName(){return name;}
