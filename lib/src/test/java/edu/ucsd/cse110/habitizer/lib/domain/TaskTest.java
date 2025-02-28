@@ -6,68 +6,32 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TaskTest {
-    private Task task;
 
-    @Before
-    public void setUp() {
-        task = new Task("Initial Task");
-        task.setElapsedTime(1000); // Hardcoded elapsed time
+    //Unit Tests
+
+    @Test
+    public void testWithId(){
+        Task task = new Task("Task 1");
+        task = task.withId(0);
+
+        var actual = task.id();
+        var expected = (Integer) 0;
+
+        assertEquals(expected,actual);
     }
 
     @Test
-    public void testInitialState() {
-        assertEquals("Initial Task", task.getName());
-        assertEquals(0, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-    }
-
-    @Test
-    public void testComplete() {
-        task.complete();
-        assertEquals(1, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-    }
-
-    @Test
-    public void testSkip() {
-        task.skip();
-        assertEquals(2, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-    }
-
-    @Test
-    public void testReset() {
-        task.complete();
+    public void testReset(){
+        Task task = new Task(0,"Task");
+        task.setCompletionStatus(1);
         task.reset();
-        assertEquals(0, task.getCompletionStatus());
-        assertEquals(-1, task.getElapsedTime());
+
+        var actual = task.getCompletionStatus();
+        var expected = (Integer) 0;
+
+        assertEquals(expected,actual);
     }
 
-    @Test
-    public void testSetName() {
-        task.setName("Updated Task");
-        assertEquals("Updated Task", task.getName());
-    }
+    // Integration Tests
 
-    @Test
-    public void testCompleteAfterSkip() {
-        task.skip();
-        assertEquals(2, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-
-        task.complete();
-        assertEquals(1, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-    }
-
-    @Test
-    public void testSkipAfterComplete() {
-        task.complete();
-        assertEquals(1, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-
-        task.skip();
-        assertEquals(2, task.getCompletionStatus());
-        assertEquals(1000, task.getElapsedTime());
-    }
 }

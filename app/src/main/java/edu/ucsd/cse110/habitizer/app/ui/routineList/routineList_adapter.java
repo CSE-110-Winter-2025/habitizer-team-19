@@ -55,7 +55,7 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
 
         binding.routineTitle.setOnClickListener(v -> {
             ((edu.ucsd.cse110.habitizer.app.MainActivity) getContext())
-                    .swapFragmentTaskList(routine.getName(), "Goal Time: " + routine.getGoalTimeToString());
+                    .swapFragmentTaskList(routine.id(),routine.getName(), "Goal Time: " + routine.getGoalTimeToString());
         });
 
         binding.goalTime.setOnClickListener(v -> {

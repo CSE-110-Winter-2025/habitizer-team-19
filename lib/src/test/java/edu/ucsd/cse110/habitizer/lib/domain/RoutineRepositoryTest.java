@@ -11,66 +11,21 @@ import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
 
 public class RoutineRepositoryTest {
 
-//    private RoutineRepository setRoutineRepository(){
-//        var data = new InMemoryDataSource();
-//        List<Routine> routines = List.of(
-//                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
-//                        new Task("Brush Teeth"),
-//                        new Task("Shower")
-//                ))),
-//                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
-//                        new Task("Homework"),
-//                        new Task("Dinner")
-//                ))));
-//        for (Routine routine : routines) {
-//            data.putRoutine(routine);
-//        }
-//
-//        //return new RoutineRepository(data);
-//        return null;
-//    }
-
+    //Unit Tests
 
     @Test
-    public void testCheckOffTaskAndRoundUpTime() {
+    public void testGetRoutineCount(){
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
-                new Routine("Morning", 60 * 60, new ArrayList<Task>(List.of(
-                        new Task("Brush Teeth"),
-                        new Task("Shower")
+                new Routine(0,"Morning", 60*60, new ArrayList<Task>(List.of(
+                        new Task(0,"Brush Teeth"),
+                        new Task(1,"Shower")
                 ))),
-                new Routine("Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
-                        new Task("Homework"),
-                        new Task("Dinner")
+                new Routine(1,"Evening", 60*60*3, new ArrayList<Task>(List.of(
+                        new Task(2,"Homework"),
+                        new Task(3,"Dinner")
                 ))));
-        for (Routine routine : routines) {
-            data.putRoutine(routine);
-        }
-        RoutineRepository rM = new RoutineRepository(data);
-        MockTimer mockTimer = new MockTimer(40);
-
-        mockTimer.advanceTime();
-        //rM.completeTask(routines.get(0).getTasks().getFirst());
-
-
-    }
-
-
-        @Test
-    public void testGetRoutineCount() {
-        var data = new InMemoryDataSource();
-        List<Routine> routines = List.of(
-                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
-                        new Task("Brush Teeth"),
-                        new Task("Shower")
-                ))),
-                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
-                        new Task("Homework"),
-                        new Task("Dinner")
-                ))));
-        for (Routine routine : routines) {
-            data.putRoutine(routine);
-        }
+        data.putRoutines(routines);
         RoutineRepository rM = new RoutineRepository(data);
 
         var actual = rM.getRoutineCount();
@@ -80,44 +35,40 @@ public class RoutineRepositoryTest {
     }
 
     @Test
-    public void testFindRoutine() {
+    public void testFindRoutine(){
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
-                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
-                        new Task("Brush Teeth"),
-                        new Task("Shower")
+                new Routine(0,"Morning", 60*60, new ArrayList<Task>(List.of(
+                        new Task(0,"Brush Teeth"),
+                        new Task(1,"Shower")
                 ))),
-                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
-                        new Task("Homework"),
-                        new Task("Dinner")
+                new Routine(1,"Evening", 60*60*3, new ArrayList<Task>(List.of(
+                        new Task(2,"Homework"),
+                        new Task(3,"Dinner")
                 ))));
-        for (Routine routine : routines) {
-            data.putRoutine(routine);
-        }
+        data.putRoutines(routines);
         RoutineRepository rM = new RoutineRepository(data);
 
-        var actual = rM.findRoutine("Morning");
+        var actual = rM.findRoutine(0);
 
-        var expected = data.getRoutineSubject("Morning");
+        var expected = data.getRoutineSubject(0);
 
         assertEquals(expected,actual);
     }
 
     @Test
-    public void testFindRoutineAll() {
+    public void testFindAllRoutines(){
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
-                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
-                        new Task("Brush Teeth"),
-                        new Task("Shower")
+                new Routine(0,"Morning", 60*60, new ArrayList<Task>(List.of(
+                        new Task(0,"Brush Teeth"),
+                        new Task(1,"Shower")
                 ))),
-                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
-                        new Task("Homework"),
-                        new Task("Dinner")
+                new Routine(1,"Evening", 60*60*3, new ArrayList<Task>(List.of(
+                        new Task(2,"Homework"),
+                        new Task(3,"Dinner")
                 ))));
-        for (Routine routine : routines) {
-            data.putRoutine(routine);
-        }
+        data.putRoutines(routines);
         RoutineRepository rM = new RoutineRepository(data);
 
         var actual = rM.findAllRoutines();
@@ -131,21 +82,19 @@ public class RoutineRepositoryTest {
     public void testSaveRoutine() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
-                new Routine("Morning", 60*60, new ArrayList<Task>(List.of(
-                        new Task("Brush Teeth"),
-                        new Task("Shower")
+                new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
+                        new Task(0, "Brush Teeth"),
+                        new Task(1, "Shower")
                 ))),
-                new Routine("Evening", 60*60*3, new ArrayList<Task>(List.of(
-                        new Task("Homework"),
-                        new Task("Dinner")
+                new Routine(1, "Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
+                        new Task(2, "Homework"),
+                        new Task(3,"Dinner")
                 ))));
-        for (Routine routine : routines) {
-            data.putRoutine(routine);
-        }
+        data.putRoutines(routines);
         RoutineRepository rM = new RoutineRepository(data);
 
-        Routine routine = new Routine("Lunch", 60*60, new ArrayList<Task>(List.of(
-                new Task("Eat Sandwich")
+        Routine routine = new Routine(2,"Lunch", 60*60, new ArrayList<Task>(List.of(
+                new Task(4,"Eat Sandwich")
         )));
 
         rM.saveRoutine(routine);
@@ -155,6 +104,81 @@ public class RoutineRepositoryTest {
         var expected = data.getAllRoutinesSubject();
 
         assertEquals(expected,actual);
-
     }
+
+    @Test
+    public void testSaveTask(){
+        var data = new InMemoryDataSource();
+        List<Routine> routines = List.of(
+                new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
+                        new Task(0, "Brush Teeth"),
+                        new Task(1, "Shower")
+                ))),
+                new Routine(1, "Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
+                        new Task(2, "Homework"),
+                        new Task(3,"Dinner")
+                ))));
+        data.putRoutines(routines);
+        RoutineRepository rM = new RoutineRepository(data);
+
+        Task task = new Task(4,"Task");
+        rM.saveTask(1,task);
+
+        var actual = rM.findAllRoutines();
+
+        data.putTask(1,task);
+        var expected = data.getAllRoutinesSubject();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    public void testRemoveRoutine(){
+        var data = new InMemoryDataSource();
+        List<Routine> routines = List.of(
+                new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
+                        new Task(0, "Brush Teeth"),
+                        new Task(1, "Shower")
+                ))),
+                new Routine(1, "Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
+                        new Task(2, "Homework"),
+                        new Task(3,"Dinner")
+                ))));
+        data.putRoutines(routines);
+        RoutineRepository rM = new RoutineRepository(data);
+
+        rM.removeRoutine(0);
+        data.removeRoutine(0);
+
+        var actual = rM.findAllRoutines();
+        var expected = data.getAllRoutinesSubject();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    public void testRemoveTask(){
+        var data = new InMemoryDataSource();
+        List<Routine> routines = List.of(
+                new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
+                        new Task(0, "Brush Teeth"),
+                        new Task(1, "Shower")
+                ))),
+                new Routine(1, "Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
+                        new Task(2, "Homework"),
+                        new Task(3,"Dinner")
+                ))));
+        data.putRoutines(routines);
+        RoutineRepository rM = new RoutineRepository(data);
+
+        rM.removeTask(0,1);
+        data.removeTask(0,1);
+
+        var actual = rM.findAllRoutines();
+        var expected = data.getAllRoutinesSubject();
+
+        assertEquals(expected,actual);
+    }
+
+    // Integration Tests
 }

@@ -1,6 +1,6 @@
 package edu.ucsd.cse110.habitizer.app;
 
-import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.rM;
+
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -59,13 +59,13 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     }
 
     // Fragment Management
-    public void swapFragmentTaskList(@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
+    public void swapFragmentTaskList(Integer id,@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
         isTaskListFragmentVisible = true;
         selectedRoutine = selectedRoutineTitle;
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, taskList_fragment.newInstance(selectedRoutineTitle))
+                .replace(R.id.fragment_container, taskList_fragment.newInstance(id))
                 .commit();
 
         toolbarTitle.setText(selectedRoutineTitle);
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             swapFragmentRoutineList();
-            rM.resetAllRoutines();
-            rM.resetToRealTimer();
+//            rM.resetAllRoutines();
+//            rM.resetToRealTimer();
             return true;
         } else if (item.getItemId() == R.id.action_bar_add_task) {
             var dialogFragment = createTaskDialogFragment.newInstance();
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     public void onDialogPositiveClick() {
         taskList_fragment fragment = (taskList_fragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment != null) {
-            fragment.refreshData(selectedRoutine);
+            fragment.refreshData();
         }
     }
 }

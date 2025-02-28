@@ -16,7 +16,7 @@ public class HabitizerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         this.dataSource =InMemoryDataSource.fromDefault();
-        this.routineRepository = RoutineRepository.rM;
+        this.routineRepository = new RoutineRepository(dataSource);
     }
 
     public RoutineRepository getRoutineRepository(){

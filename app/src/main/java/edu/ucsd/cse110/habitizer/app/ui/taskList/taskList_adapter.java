@@ -1,6 +1,6 @@
 package edu.ucsd.cse110.habitizer.app.ui.taskList;
 
-import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.rM;
+
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,24 +13,28 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class taskList_adapter extends ArrayAdapter<Task> {
 
+    private MainViewModel activityModel;
     private boolean buttonsEnabled = false;
     private boolean removeEnabled = true;
     private boolean timerEnabled = false;
-    private Consumer<String> onDeleteClick;
+    private Consumer<Integer> onDeleteClick;
     private Consumer<Long> onTaskComplete;
     private Runnable onAllTasksDone;
 
-    public taskList_adapter(Context context, List<Task> tasks, Consumer<String> onDeleteClick) {
+    public taskList_adapter(Context context, List<Task> tasks, MainViewModel activityModel, Consumer<Integer> onDeleteClick) {
         super(context, 0, new ArrayList<>(tasks));
+        this.activityModel = activityModel;
         this.onDeleteClick = onDeleteClick;
     }
 
@@ -62,6 +66,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
     public View getView(int position, View convertView, ViewGroup parent) {
         var task = getItem(position);
         assert task != null;
+
 
         ListItemTaskBinding binding = getBinding(convertView, parent);
         updateTaskUI(binding, task);
@@ -123,30 +128,32 @@ public class taskList_adapter extends ArrayAdapter<Task> {
     }
 
     // Complete Task
-    private void completeTask(ListItemTaskBinding binding, Task task) {
-        task.complete();
-        rM.completeTask(task);
+    private void completeTask(@NonNull ListItemTaskBinding binding, @NonNull Task task) {
+        System.out.println("Loading data: " + task.getName());
+        activityModel.completeTask(task);
+
         binding.taskTime.setText(task.getElapsedTimeToString());
         binding.taskTime.setVisibility(timerEnabled ? View.VISIBLE : View.GONE);
         binding.completeButton.setEnabled(false);
         binding.skipButton.setEnabled(false);
 
         if (onTaskComplete != null) {
-            onTaskComplete.accept(rM.getTotalElapsedTime());
+            onTaskComplete.accept(activityModel.getTotalElapsedTime());
         }
         checkAllTasksDone();
     }
 
     // Skip Task
-    private void skipTask(ListItemTaskBinding binding, Task task) {
-        task.skip();
+    private void skipTask(@NonNull ListItemTaskBinding binding,@NonNull Task task) {
+        activityModel.skipTask(task);
+
         binding.skipButton.setEnabled(false);
         checkAllTasksDone();
     }
 
     // Delete Task
-    private void deleteTask(Task task) {
-        onDeleteClick.accept(task.getName());
+    private void deleteTask(@NonNull Task task) {
+        onDeleteClick.accept(task.id());
         notifyDataSetChanged();
     }
 
@@ -154,6 +161,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
     private void checkAllTasksDone() {
         for (int i = 0; i < getCount(); i++) {
             Task t = getItem(i);
+            assert t != null;
             if (t.getCompletionStatus() == 0) {
                 return;
             }
