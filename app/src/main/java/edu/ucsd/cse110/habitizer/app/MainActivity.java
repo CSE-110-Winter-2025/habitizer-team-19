@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.habitizer.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
@@ -91,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
         toolbarTitle.setText("Routines");
         toolbarSubtitle.setVisibility(View.GONE);
 
+        if(mMenu != null){
+            mMenu.findItem(R.id.action_bar_add_routine).setVisible(true);
+        }
+
         updateBackButtonVisibility();
     }
 
@@ -106,8 +111,10 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
         }
 
         if (mMenu != null) {
-            boolean shouldShowAddButton = isTaskListFragmentVisible && !routineRunning;
-            mMenu.findItem(R.id.action_bar_add_task).setVisible(shouldShowAddButton || selectedRoutine != null);
+            boolean shouldShowAddTaskButton = isTaskListFragmentVisible && !routineRunning;
+            boolean shouldShowAddRoutineButton = !isTaskListFragmentVisible;
+            mMenu.findItem(R.id.action_bar_add_task).setVisible(shouldShowAddTaskButton || selectedRoutine != null);
+            mMenu.findItem(R.id.action_bar_add_routine).setVisible(shouldShowAddRoutineButton || selectedRoutine == null);
         }
     }
 
@@ -123,12 +130,17 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             swapFragmentRoutineList();
-//            rM.resetAllRoutines();
-//            rM.resetToRealTimer();
             return true;
         } else if (item.getItemId() == R.id.action_bar_add_task) {
             var dialogFragment = createTaskDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "createTaskDialogFragment");
+        } else if (item.getItemId() == R.id.action_bar_add_routine) {
+            var modelOwner = this;
+            var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
+            var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
+            MainViewModel activityModel = modelProvider.get(MainViewModel.class);
+
+            activityModel.addRoutine();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -106,6 +106,12 @@ public class MainViewModel extends ViewModel {
         currentRoutineId.setValue(id);
     }
 
+    public void addRoutine(){
+        Routine routine = new Routine("New Routine",0);
+        routineRepository.saveRoutine(routine);
+    }
+
+
 
     // Update the task subjects for each task in the routine
     private void updateTaskSubjects(List<Task> tasks) {
