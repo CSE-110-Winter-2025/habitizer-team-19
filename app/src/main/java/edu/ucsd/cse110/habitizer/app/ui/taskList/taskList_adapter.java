@@ -31,6 +31,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
     private Consumer<Integer> onDeleteClick;
     private Consumer<Long> onTaskComplete;
     private Runnable onAllTasksDone;
+    private boolean paused = false;
 
     public taskList_adapter(Context context, List<Task> tasks, MainViewModel activityModel, Consumer<Integer> onDeleteClick) {
         super(context, 0, new ArrayList<>(tasks));
@@ -91,6 +92,7 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.taskTime.setText(task.getElapsedTimeToString());
 
         binding.completeButton.setVisibility(buttonsEnabled ? View.VISIBLE : View.GONE);
+        binding.completeButton.setEnabled(!paused);
         binding.skipButton.setVisibility(buttonsEnabled ? View.VISIBLE : View.GONE);
         binding.taskTime.setVisibility(timerEnabled ? View.VISIBLE : View.GONE);
         binding.taskDeleteButton.setVisibility(removeEnabled ? View.VISIBLE : View.GONE);
@@ -149,6 +151,11 @@ public class taskList_adapter extends ArrayAdapter<Task> {
 
         binding.skipButton.setEnabled(false);
         checkAllTasksDone();
+    }
+
+    public void Pause(boolean status) {
+        paused = status;
+        notifyDataSetChanged();
     }
 
     // Delete Task

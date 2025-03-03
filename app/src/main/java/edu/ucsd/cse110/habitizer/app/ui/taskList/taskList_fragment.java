@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import edu.ucsd.cse110.habitizer.app.MainActivity;
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
+import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.confirmDeleteTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
@@ -86,6 +87,9 @@ public class taskList_fragment extends Fragment{
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
         view.taskList.setAdapter(adapter);
         view.StopTimerButton.setEnabled(false);
+        view.AdvanceTimerButton.setEnabled(false);
+        view.StopTimerButton.setVisibility(View.GONE);
+        view.AdvanceTimerButton.setVisibility(View.GONE);
 
         adapter.setOnTaskComplete(totalTime -> {
             view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getRoutineElapsedTimeString());
@@ -111,11 +115,15 @@ public class taskList_fragment extends Fragment{
                 adapter.setRemoveEnabled(false);
                 adapter.setTimerEnabled(true);
                 adapter.setButtonsEnabled(true);
+                view.StopTimerButton.setVisibility(View.VISIBLE);
+                view.AdvanceTimerButton.setVisibility(View.VISIBLE);
                 ((MainActivity) requireActivity()).setRoutineRunning(true);
                 view.StartRoutineButton.setText("End Routine");
             } else if(activityModel.getRoutineStatus() == 1){
                 activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
+                view.StopTimerButton.setVisibility(View.GONE);
+                view.AdvanceTimerButton.setVisibility(View.GONE);
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
@@ -135,12 +143,21 @@ public class taskList_fragment extends Fragment{
         // Initially disable the Advance Time button
         view.AdvanceTimerButton.setEnabled(false);
 
-        // Stop Real Timer and Switch to Mock Timer
+        // Pause / Resume
         view.StopTimerButton.setOnClickListener(v -> {
-            activityModel.switchToMockTimer();
-            view.AdvanceTimerButton.setEnabled(true);
-            view.StopTimerButton.setEnabled(false);
-
+            if(!activityModel.isPaused()) {
+                //TODO: Call Timer pause function
+                activityModel.setPaused(true);
+                view.AdvanceTimerButton.setEnabled(true);
+                view.StopTimerButton.setImageResource(R.drawable.ic_baseline_play_arrow_24);
+                adapter.Pause(true);
+            } else {
+                //TODO: Call Timer resume function
+                activityModel.setPaused(false);
+                view.AdvanceTimerButton.setEnabled(false);
+                view.StopTimerButton.setImageResource(R.drawable.ic_baseline_pause_24);
+                adapter.Pause(false);
+            }
         });
 
         // Manually Advance Time (only works in mock mode)
