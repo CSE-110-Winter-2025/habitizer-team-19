@@ -146,13 +146,13 @@ public class taskList_fragment extends Fragment{
         // Pause / Resume
         view.StopTimerButton.setOnClickListener(v -> {
             if(!activityModel.isPaused()) {
-                //TODO: Call Timer pause function
+                activityModel.pauseTimer();
                 activityModel.setPaused(true);
                 view.AdvanceTimerButton.setEnabled(true);
                 view.StopTimerButton.setImageResource(R.drawable.ic_baseline_play_arrow_24);
                 adapter.Pause(true);
             } else {
-                //TODO: Call Timer resume function
+                activityModel.resumeTimer();
                 activityModel.setPaused(false);
                 view.AdvanceTimerButton.setEnabled(false);
                 view.StopTimerButton.setImageResource(R.drawable.ic_baseline_pause_24);

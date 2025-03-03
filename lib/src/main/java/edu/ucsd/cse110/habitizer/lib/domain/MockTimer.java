@@ -24,9 +24,18 @@ public class MockTimer implements TimerInterface {
 
     @Override
     public long getElapsedTime() {
+
         var taskTime = elapsedTime;
         elapsedTime = 0;
         return taskTime;
+    }
+
+    public void pauseTimer() {
+        isRunning = false;
+    }
+
+    public void resumeTimer() {
+        isRunning = true;
     }
 
     public boolean isRunning() {
