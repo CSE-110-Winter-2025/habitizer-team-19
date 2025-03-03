@@ -234,6 +234,18 @@ public class MainViewModel extends ViewModel {
         timer.endTimer();
     }
 
+    public void pauseTimer() {
+        if (timer != null) {
+            timer.pauseTimer();
+        }
+    }
+
+    public void resumeTimer() {
+        if (timer != null) {
+            timer.resumeTimer();
+        }
+    }
+
     public void switchToMockTimer() {
         long currentTime = timer.getElapsedTime();
         this.timer = new MockTimer(currentTime);
