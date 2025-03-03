@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
@@ -23,8 +22,7 @@ public class InMemoryDataSource {
     private int nextTaskId = 0;
 
     // Constructor
-    public InMemoryDataSource() {
-    }
+    public InMemoryDataSource() {}
 
     // Default Initialization
     public final static List<Routine> DEFAULT_ROUTINES = List.of(

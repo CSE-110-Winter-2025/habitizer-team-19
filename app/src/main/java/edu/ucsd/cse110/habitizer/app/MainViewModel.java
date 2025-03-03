@@ -1,6 +1,4 @@
 package edu.ucsd.cse110.habitizer.app;
-
-
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
 import androidx.annotation.NonNull;
