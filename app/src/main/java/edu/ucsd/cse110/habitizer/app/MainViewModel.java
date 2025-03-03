@@ -27,6 +27,8 @@ public class MainViewModel extends ViewModel {
     private long routineDisplayTime = 0;
     private int hasStarted = 0;
 
+    private boolean paused = false;
+
     private final Subject<List<Routine>> routineSubjectList;
     private final Subject<Integer> currentRoutineId ;
     private final Subject<List<Task>> currentRoutineTasks ;
@@ -300,6 +302,14 @@ public class MainViewModel extends ViewModel {
         long minutes = (roundedTime % 3600) / 60;
         long seconds = roundedTime % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     // Helper Methods
