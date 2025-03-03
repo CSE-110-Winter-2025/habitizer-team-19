@@ -309,34 +309,4 @@ public class MainViewModel extends ViewModel {
         return (elapsedTime / 60) * 60;
     }
 
-
-
-//
-//    public Subject<List<Task>> getTasks(String routineName){
-//        var tasks = new Subject<List<Task>>();
-//        tasks.setValue(Objects.requireNonNull(routineRepository.findRoutine(routineName).getValue()).getTasks());
-//        System.out.println("test");
-//        return tasks;
-//    }
-//
-//    public Subject<RoutineRepository> getRepository(){
-//        var repository = new Subject<RoutineRepository>();
-//        repository.setValue(routineRepository);
-//        return repository;
-//    }
-//
-//    public void pushTask (Task task) {
-//        var routine = routineRepository.findRoutine(selecetedRoutine);
-//        assert routine.getValue() != null;
-//        routine.getValue().addTask(task);
-//    }
-//
-//    public void removeTask(String name) {
-//        assert routineRepository.findRoutine(selecetedRoutine).getValue() != null;
-//        routineRepository.findRoutine(selecetedRoutine).getValue().removeTask(name);
-//    }
-//
-//    public void setSelectedRoutine(String selectedRoutine) {
-//        this.selecetedRoutine = selectedRoutine;
-//    }
 }

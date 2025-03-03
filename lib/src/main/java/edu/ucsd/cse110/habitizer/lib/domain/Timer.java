@@ -33,12 +33,4 @@ public class Timer implements TimerInterface {
         return elapsedTime;
     }
 
-//    public void setPrevTime(){
-//        this.prevTime = System.currentTimeMillis()/1000;
-//    }
-
-    public long getPrevTime(){
-        return this.prevTime;
-    }
-
 }
