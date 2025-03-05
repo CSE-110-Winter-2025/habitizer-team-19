@@ -18,6 +18,9 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.Timer;
 import edu.ucsd.cse110.habitizer.lib.domain.TimerInterface;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
+import android.os.Handler;
+import android.os.Looper;
+
 
 public class MainViewModel extends ViewModel {
 
@@ -38,6 +41,9 @@ public class MainViewModel extends ViewModel {
     private final Subject<Integer> currentRoutineState ; //0: initial, 1: routine started, 2:routine ended
 
     private final Subject<Boolean> fragmentState; //True: Routine List, False: Task List
+    private final Subject<String> routineElapsedTimeFormatted = new Subject<>();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
 
 
     //
@@ -195,15 +201,26 @@ public class MainViewModel extends ViewModel {
 
     // Routine State Management
     public void startRoutine() {
+        setRoutineStatus(1);
         totalElapsedTime = 0;
         routineDisplayTime = 0;
+
+        routineElapsedTimeFormatted.setValue("00:00:00");
+
         startTimer();
-        setRoutineStatus(1);
     }
 
     public void endRoutine() {
+        long elapsed = timer.peekElapsedTime();
+
+        // Round UP to the next full minute
+        routineDisplayTime = ((elapsed + 59) / 60) * 60;
+
         endTimer();
         setRoutineStatus(2);
+
+        // Ensure UI updates on the main thread
+        mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
     }
 
     public void setRoutineStatus(int started) {
@@ -228,7 +245,28 @@ public class MainViewModel extends ViewModel {
     public void startTimer() {
         this.timer = new Timer();
         timer.startTimer();
+        routineDisplayTime = 0; // Reset routine display time
+
+        new Thread(() -> {
+            while (hasStarted == 1) {
+                long elapsed = timer.peekElapsedTime(); // Fetch elapsed time without resetting task timers
+                long newRoutineTime = (elapsed / 60) * 60; // Round to nearest full minute
+
+                if (newRoutineTime > routineDisplayTime) {
+                    routineDisplayTime = newRoutineTime;
+                    // Ensure UI updates on the main thread
+                    mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
+                }
+
+                try {
+                    Thread.sleep(1000); // Update every second
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }).start();
     }
+
 
     public void endTimer() {
         timer.endTimer();
@@ -250,8 +288,16 @@ public class MainViewModel extends ViewModel {
     public void advanceTime() {
         if (timer instanceof MockTimer) {
             ((MockTimer) timer).advanceTime();
+
+            long elapsed = timer.peekElapsedTime();
+            long currentMinutes = elapsed / 60;
+            if (currentMinutes > routineDisplayTime) {
+                routineDisplayTime = currentMinutes;
+                routineElapsedTimeFormatted.setValue(formatElapsedTime(elapsed));
+            }
         }
     }
+
 
     public long getElapsedTime() {
         return timer.getElapsedTime();
@@ -287,7 +333,7 @@ public class MainViewModel extends ViewModel {
 
     public String getRoutineElapsedTimeString() {
         if (routineDisplayTime <= 0) {
-            return "--:--:--";
+            return "00:00:00";
         }
         long hours = routineDisplayTime / 3600;
         long minutes = (routineDisplayTime % 3600) / 60;
@@ -318,5 +364,19 @@ public class MainViewModel extends ViewModel {
     public long getRoundedRoutineElapsedTime(long elapsedTime) {
         return (elapsedTime / 60) * 60;
     }
+
+    public Subject<String> getRoutineElapsedTimeFormatted() {
+        return routineElapsedTimeFormatted;
+    }
+
+    private String formatElapsedTime(long seconds) {
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long secs = seconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, secs);
+    }
+
+
+
 
 }

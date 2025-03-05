@@ -81,6 +81,7 @@ public class taskList_fragment extends Fragment{
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,12 +96,20 @@ public class taskList_fragment extends Fragment{
             view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getRoutineElapsedTimeString());
         });
 
+        activityModel.getRoutineElapsedTimeFormatted().observe(time -> {
+            if (time != null) {
+                view.TotalElapsedTime.setText("Total Elapsed Time: " + time);
+            } else {
+                view.TotalElapsedTime.setText("Total Elapsed Time: --:--:--"); // Ensures it never shows null
+            }
+        });
+
+
         adapter.setOnAllTasksDone(() -> {
             // Only do this if the routine is currently running
             if (activityModel.getRoutineStatus() == 1) {
                 activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
-                view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
                 view.StopTimerButton.setEnabled(false);
@@ -124,7 +133,6 @@ public class taskList_fragment extends Fragment{
                 adapter.setButtonsEnabled(false);
                 view.StopTimerButton.setVisibility(View.GONE);
                 view.AdvanceTimerButton.setVisibility(View.GONE);
-                view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getTotalElapsedTimeToString());
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
                 view.StopTimerButton.setEnabled(false);

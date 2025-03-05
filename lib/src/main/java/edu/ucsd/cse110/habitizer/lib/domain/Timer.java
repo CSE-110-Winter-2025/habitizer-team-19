@@ -28,9 +28,17 @@ public class Timer implements TimerInterface {
         if (startTime == 0){
             return 0; //return 0 if the timer has not been started
         }
-        long elapsedTime = System.currentTimeMillis()/1000 - prevTime;
+        long taskTime = System.currentTimeMillis()/1000 - prevTime;
         this.prevTime = System.currentTimeMillis()/1000;
-        return elapsedTime;
+        return taskTime;
     }
+
+    public long peekElapsedTime() {
+        if (startTime == 0) {
+            return 0;
+        }
+        return (System.currentTimeMillis() / 1000) - startTime;
+    }
+
 
 }
