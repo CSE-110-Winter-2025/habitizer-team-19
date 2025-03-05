@@ -263,6 +263,15 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+    public static long taskDisplay(long elapsedTime){
+        if(elapsedTime<60) {
+            return ((elapsedTime-1)/5)*5+5;
+        }
+        else{
+            return ((elapsedTime + 59) / 60) * 60;
+        }
+    }
+
     public long getElapsedTime() {
         return timer.getElapsedTime();
     }
@@ -277,7 +286,8 @@ public class MainViewModel extends ViewModel {
 
         long elapsedTime = getElapsedTime();
         totalElapsedTime += elapsedTime;
-        long roundedTaskTime = ((elapsedTime + 59) / 60) * 60;
+        long roundedTaskTime = taskDisplay(elapsedTime);
+
         routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
         task.setElapsedTime(roundedTaskTime);
         task.setCompletionStatus(1);
