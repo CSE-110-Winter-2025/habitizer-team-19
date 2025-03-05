@@ -4,6 +4,7 @@ import javax.swing.CellEditor;
 
 public class MockTimer implements TimerInterface {
     private long elapsedTime;
+    private long startingTime;
     private boolean isRunning;
 
     public MockTimer(long initialTime) {
@@ -32,6 +33,13 @@ public class MockTimer implements TimerInterface {
         return elapsedTime;
     }
 
+    public void pauseTimer() {
+        isRunning = false;
+    }
+
+    public void resumeTimer() {
+        isRunning = true;
+    }
 
     public boolean isRunning() {
         return isRunning;

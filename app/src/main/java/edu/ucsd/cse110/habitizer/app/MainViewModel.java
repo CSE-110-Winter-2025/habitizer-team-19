@@ -1,6 +1,4 @@
 package edu.ucsd.cse110.habitizer.app;
-
-
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
 import androidx.annotation.NonNull;
@@ -270,6 +268,18 @@ public class MainViewModel extends ViewModel {
 
     public void endTimer() {
         timer.endTimer();
+    }
+
+    public void pauseTimer() {
+        if (timer != null) {
+            timer.pauseTimer();
+        }
+    }
+
+    public void resumeTimer() {
+        if (timer != null) {
+            timer.resumeTimer();
+        }
     }
 
     public void switchToMockTimer() {

@@ -61,4 +61,58 @@ public class TimerTest {
         mockTimer.advanceTime();
         assertEquals("Mock timer should not advance when stopped", 10, mockTimer.getElapsedTime());
     }
+
+    @Test
+    public void testPauseTimerStopsElapsedTime() {
+        timer.startTimer();
+        long initialElapsed = timer.getElapsedTime();
+
+        timer.pauseTimer();
+        long elapsedAfterPause = timer.getElapsedTime();
+
+        assertEquals("Elapsed time should not change after pause", initialElapsed, elapsedAfterPause);
+    }
+
+    @Test
+    public void testResumeTimerContinuesFromPausedTime() throws InterruptedException {
+        timer.startTimer();
+        timer.pauseTimer();
+        long pausedElapsed = timer.getElapsedTime();
+
+        timer.resumeTimer();
+        //simulate 1 second passing
+        Thread.sleep(1000);
+        long elapsedAfterResume = timer.getElapsedTime();
+
+        assertTrue("Elapsed time should increment after resume", elapsedAfterResume > pausedElapsed);
+    }
+
+    @Test
+    public void testMultiplePauseResumeCycles() throws InterruptedException {
+        timer.startTimer();
+        //simulate 2 seconds passing
+        Thread.sleep(2000);
+        timer.pauseTimer();
+        long firstPauseTime = timer.getElapsedTime();
+
+        timer.resumeTimer();
+        //simulate 1 second passing
+        Thread.sleep(1000);
+        timer.pauseTimer();
+        long secondPauseTime = timer.getElapsedTime();
+        assertTrue("Timer should accumulate time across pauses", secondPauseTime > firstPauseTime);
+    }
+
+    @Test
+    public void testResumeWithoutPauseDoesNothing() throws InterruptedException {
+        timer.startTimer();
+        long initialElapsed = timer.getElapsedTime();
+
+        timer.resumeTimer();//should have no effect
+        //simulate 1 second passing
+        Thread.sleep(1000);
+        long elapsedAfterResume = timer.getElapsedTime();
+
+        assertTrue("Elapsed time should increment normally", elapsedAfterResume > initialElapsed);
+    }
 }

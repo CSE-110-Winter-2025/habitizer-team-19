@@ -64,4 +64,45 @@ public class MockTimerTest {
         }
         assertEquals(160, mockTimer.getElapsedTime());
     }
+
+    @Test
+    public void testPauseTimerStopsMockTimer() {
+        mockTimer.startTimer();
+        mockTimer.pauseTimer();
+        assertFalse("Mock timer should be paused", mockTimer.isRunning());
+    }
+
+    @Test
+    public void testResumeTimerStartsMockTimer() {
+        mockTimer.startTimer();
+        mockTimer.pauseTimer();
+        mockTimer.resumeTimer();
+        assertTrue("Mock timer should resume", mockTimer.isRunning());
+    }
+
+    @Test
+    public void testElapsedTimeIsZeroWhenPaused() {
+        mockTimer.startTimer();
+        mockTimer.pauseTimer();
+        assertEquals("Elapsed time should be 10 when paused since initialized at 10", 10, mockTimer.getElapsedTime());
+    }
+
+    @Test
+    public void testAdvanceTimeFailsWhenPaused() {
+        mockTimer.startTimer();
+        mockTimer.pauseTimer();
+        mockTimer.advanceTime();
+        assertEquals("Advance time should not work when paused", 10, mockTimer.getElapsedTime());
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

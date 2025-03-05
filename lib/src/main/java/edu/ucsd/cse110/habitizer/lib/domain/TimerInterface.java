@@ -4,6 +4,8 @@ public interface TimerInterface {
     void startTimer();
     void endTimer();
     long getElapsedTime();
-
     long peekElapsedTime();
+    void pauseTimer();
+    void resumeTimer();
+
 }
