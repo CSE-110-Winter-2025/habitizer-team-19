@@ -164,6 +164,8 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+
+
     // Update a task in the routine
     public void updateTask(Task updatedTask) {
         Integer routineId = currentRoutineId.getValue();
@@ -188,6 +190,34 @@ public class MainViewModel extends ViewModel {
                 // Refresh the task list and notify observers
                 currentRoutineTasks.setValue(routine.getTasks());
             }
+        }
+    }
+
+    public void moveTaskUp(Integer taskId){
+        Integer routineId = currentRoutineId.getValue();
+        if (routineId == null || routineId == -1) {
+            return;  // No routine selected
+        }
+
+        routineRepository.moveTaskUp(routineId,taskId);
+
+        var routine = routineRepository.findRoutine(routineId).getValue();
+        if (routine != null) {
+            currentRoutineTasks.setValue(routine.getTasks()); // Refresh the task list
+        }
+    }
+
+    public void moveTaskDown(Integer taskId){
+        Integer routineId = currentRoutineId.getValue();
+        if (routineId == null || routineId == -1) {
+            return;  // No routine selected
+        }
+
+        routineRepository.moveTaskDown(routineId,taskId);
+
+        var routine = routineRepository.findRoutine(routineId).getValue();
+        if (routine != null) {
+            currentRoutineTasks.setValue(routine.getTasks()); // Refresh the task list
         }
     }
 
@@ -333,6 +363,8 @@ public class MainViewModel extends ViewModel {
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
+
+
 
     // Helper Methods
     public long getRoundedRoutineElapsedTime(long elapsedTime) {

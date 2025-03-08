@@ -44,4 +44,12 @@ public class RoutineRepository {
         dataSource.removeTask(routineId,taskId);
     }
 
+    public void moveTaskUp(int routineId, int taskId){
+        dataSource.moveTaskUp(routineId, taskId);
+    }
+
+    public void moveTaskDown(int routineId, int taskId){
+        dataSource.moveTaskDown(routineId, taskId);
+    }
+
 }

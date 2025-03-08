@@ -28,8 +28,8 @@ public class InMemoryDataSource {
     public final static List<Routine> DEFAULT_ROUTINES = List.of(
             new Routine("Morning", 45*60, new ArrayList<Task>(List.of(
                     new Task(1,"Shower"),
-                    new Task(2,"Brush Teeth"),
                     new Task(3,"Dress"),
+                    new Task(2,"Brush Teeth"),
                     new Task(4,"Make Coffee"),
                     new Task(5,"Make Lunch"),
                     new Task(6,"Dinner Prep"),
@@ -146,6 +146,38 @@ public class InMemoryDataSource {
         }
         allRoutinesSubject.setValue(getRoutines());
     }
+
+    public void swapTask(int routineId, int taskId, int direction){
+        // direction: 1 is down, -1 is up
+
+        var fixedRoutine = routines.get(routineId);
+        var taskIndex = fixedRoutine.getTaskIndex(taskId);
+        fixedRoutine.swapElement(taskIndex, taskIndex + direction);
+
+        routines.replace(routineId,fixedRoutine);
+
+        if(routineSubjects.containsKey(fixedRoutine.id())){
+            routineSubjects.get(fixedRoutine.id()).setValue(fixedRoutine);
+        }
+        allRoutinesSubject.setValue(getRoutines());
+    }
+
+    public void moveTaskUp(int routineId,int taskId){
+        var fixedRoutine = routines.get(routineId);
+        var taskIndex = fixedRoutine.getTaskIndex(taskId);
+        if(taskIndex != 0){
+            swapTask(routineId,taskId,-1);
+        }
+    }
+
+    public void moveTaskDown(int routineId, int taskId){
+        var fixedRoutine = routines.get(routineId);
+        var taskIndex = fixedRoutine.getTaskIndex(taskId);
+        if(taskIndex < fixedRoutine.getTaskCount() - 1){
+            swapTask(routineId,taskId,1);
+        }
+    }
+
 
     // Setting ID private functions
     private Routine preInsert(Routine routine){

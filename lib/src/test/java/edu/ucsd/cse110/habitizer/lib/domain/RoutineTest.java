@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RoutineTest{
@@ -103,6 +104,24 @@ public class RoutineTest{
 
         tasks.get(0).reset();
         tasks.get(1).reset();
+
+        assertEquals(tasks,actual);
+    }
+
+    @Test
+    public void testSwapElement(){
+        ArrayList<Task> tasks = new ArrayList<>(){
+            {
+                add(new Task(0,"Brush Teeth"));
+                add(new Task(1,"Shower"));
+            }
+        };
+        Routine routine = new Routine(0,"Morning", 60*60, tasks);
+
+        routine.swapElement(0,1);
+        Collections.swap(tasks,0,1);
+
+        var actual = routine.getTasks();
 
         assertEquals(tasks,actual);
     }
