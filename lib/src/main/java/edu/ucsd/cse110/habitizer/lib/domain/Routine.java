@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +46,19 @@ public class Routine {
         return tasks;
     }
 
+    public int getTaskCount(){
+        return tasks.size();
+    }
+
+    public int getTaskIndex(int taskId){
+        for(int i = 0; i < tasks.size(); i++){
+            if(taskId == tasks.get(i).id()){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void setGoalTime(long newTime) {
         this.goalTimeSeconds = newTime;
     }
@@ -68,6 +82,10 @@ public class Routine {
         tasks.forEach(Task::reset);
     }
 
+    public void swapElement(int i, int j){
+        Collections.swap(tasks, i, j);
+    }
+
     // To String Method
     public String getGoalTimeToString() {
         long hours = goalTimeSeconds / 3600;
@@ -75,5 +93,7 @@ public class Routine {
         long seconds = goalTimeSeconds % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
+
+
 
 }

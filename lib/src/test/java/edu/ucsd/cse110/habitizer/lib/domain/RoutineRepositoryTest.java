@@ -180,5 +180,53 @@ public class RoutineRepositoryTest {
         assertEquals(expected,actual);
     }
 
+    @Test
+    public void moveTaskUp(){
+        var data = new InMemoryDataSource();
+        List<Routine> routines = List.of(
+                new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
+                        new Task(0, "Brush Teeth"),
+                        new Task(1, "Shower")
+                ))),
+                new Routine(1, "Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
+                        new Task(2, "Homework"),
+                        new Task(3,"Dinner")
+                ))));
+        data.putRoutines(routines);
+        RoutineRepository rM = new RoutineRepository(data);
+
+        rM.moveTaskUp(1,3);
+        data.moveTaskUp(1,3);
+
+        var actual = rM.findAllRoutines();
+        var expected = data.getAllRoutinesSubject();
+
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    public void moveTaskDown(){
+        var data = new InMemoryDataSource();
+        List<Routine> routines = List.of(
+                new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
+                        new Task(0, "Brush Teeth"),
+                        new Task(1, "Shower")
+                ))),
+                new Routine(1, "Evening", 60 * 60 * 3, new ArrayList<Task>(List.of(
+                        new Task(2, "Homework"),
+                        new Task(3,"Dinner")
+                ))));
+        data.putRoutines(routines);
+        RoutineRepository rM = new RoutineRepository(data);
+
+        rM.moveTaskUp(1,2);
+        data.moveTaskUp(1,2);
+
+        var actual = rM.findAllRoutines();
+        var expected = data.getAllRoutinesSubject();
+
+        assertEquals(expected,actual);
+    }
+
     // Integration Tests
 }
