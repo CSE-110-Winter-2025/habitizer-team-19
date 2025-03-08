@@ -309,6 +309,15 @@ public class MainViewModel extends ViewModel {
     }
 
 
+    public static long taskDisplay(long elapsedTime){
+        if(elapsedTime<60) {
+            return ((elapsedTime-1)/5)*5+5;
+        }
+        else{
+            return ((elapsedTime + 59) / 60) * 60;
+        }
+    }
+
     public long getElapsedTime() {
         return timer.getElapsedTime();
     }
@@ -323,7 +332,8 @@ public class MainViewModel extends ViewModel {
 
         long elapsedTime = getElapsedTime();
         totalElapsedTime += elapsedTime;
-        long roundedTaskTime = ((elapsedTime + 59) / 60) * 60;
+        long roundedTaskTime = taskDisplay(elapsedTime);
+
         routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
         task.setElapsedTime(roundedTaskTime);
         task.setCompletionStatus(1);
@@ -387,6 +397,32 @@ public class MainViewModel extends ViewModel {
     }
 
 
-
-
+//
+//    public Subject<List<Task>> getTasks(String routineName){
+//        var tasks = new Subject<List<Task>>();
+//        tasks.setValue(Objects.requireNonNull(routineRepository.findRoutine(routineName).getValue()).getTasks());
+//        System.out.println("test");
+//        return tasks;
+//    }
+//
+//    public Subject<RoutineRepository> getRepository(){
+//        var repository = new Subject<RoutineRepository>();
+//        repository.setValue(routineRepository);
+//        return repository;
+//    }
+//
+//    public void pushTask (Task task) {
+//        var routine = routineRepository.findRoutine(selecetedRoutine);
+//        assert routine.getValue() != null;
+//        routine.getValue().addTask(task);
+//    }
+//
+//    public void removeTask(String name) {
+//        assert routineRepository.findRoutine(selecetedRoutine).getValue() != null;
+//        routineRepository.findRoutine(selecetedRoutine).getValue().removeTask(name);
+//    }
+//
+//    public void setSelectedRoutine(String selectedRoutine) {
+//        this.selectedRoutine = selectedRoutine;
+//    }
 }
