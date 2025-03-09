@@ -352,7 +352,8 @@ public class MainViewModel extends ViewModel {
         totalElapsedTime += elapsedTime;
         long roundedTaskTime = taskDisplay(elapsedTime);
 
-        routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
+        // Commented out because when checking task it might make routineDisplayName larger and delay the changing of the asynchronous timer
+        // routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
         task.setElapsedTime(roundedTaskTime);
         task.setCompletionStatus(1);
     }

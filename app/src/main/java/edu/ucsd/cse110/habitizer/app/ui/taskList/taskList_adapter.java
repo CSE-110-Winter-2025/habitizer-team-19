@@ -145,9 +145,9 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.completeButton.setEnabled(false);
         binding.skipButton.setEnabled(false);
 
-        if (onTaskComplete != null) {
+/*        if (onTaskComplete != null) {
             onTaskComplete.accept(activityModel.getTotalElapsedTime());
-        }
+        }*/
         checkAllTasksDone();
     }
 

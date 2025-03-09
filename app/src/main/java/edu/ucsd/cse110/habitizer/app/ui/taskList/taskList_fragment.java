@@ -88,10 +88,12 @@ public class taskList_fragment extends Fragment{
         view.StopTimerButton.setVisibility(View.GONE);
         view.AdvanceTimerButton.setVisibility(View.GONE);
 
+/*
         adapter.setOnTaskComplete(totalTime -> {
             view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getRoutineElapsedTimeString());
         });
 
+*/
         activityModel.getRoutineElapsedTimeFormatted().observe(time -> {
             if (time != null) {
                 view.TotalElapsedTime.setText("Total Elapsed Time: " + time);
