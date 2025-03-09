@@ -133,15 +133,6 @@ public class taskList_fragment extends Fragment{
                 view.StopTimerButton.setEnabled(false);
                 view.AdvanceTimerButton.setEnabled(false);
             }
-            // THIS CODE BLOCK IS NEVER EXECUTED. I will be moving it to OnOptionsSelect in MainActivity
-           /* else if(activityModel.getRoutineState().getValue() == 2){
-                view.StartRoutineButton.setText("Testing");
-                activityModel.resetToRealTimer();
-                activityModel.resetAllRoutines();
-                ((MainActivity) requireActivity()).setRoutineRunning(false);
-                MainActivity mainActivity = (MainActivity) requireActivity();
-                mainActivity.swapFragmentRoutineList();
-            }*/
         });
 
         // Initially disable the Advance Time button

@@ -28,7 +28,6 @@ public class MainViewModel extends ViewModel {
     private TimerInterface timer;
     private long totalElapsedTime = 0;
     private long routineDisplayTime = 0;
-    //private int routineStatus = 0;
 
     private boolean paused = false;
 

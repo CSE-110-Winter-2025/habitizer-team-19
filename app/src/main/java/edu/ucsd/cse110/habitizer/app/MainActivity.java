@@ -144,11 +144,6 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
             var dialogFragment = createTaskDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "createTaskDialogFragment");
         } else if (item.getItemId() == R.id.action_bar_add_routine) {
-            var modelOwner = this;
-            var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
-            var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
-            MainViewModel activityModel = modelProvider.get(MainViewModel.class);
-
             activityModel.addRoutine();
         }
         return super.onOptionsItemSelected(item);
