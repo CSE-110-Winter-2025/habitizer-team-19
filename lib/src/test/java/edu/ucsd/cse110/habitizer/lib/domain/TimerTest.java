@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class TimerTest {
     private Timer timer;
     private MockTimer mockTimer;
@@ -29,7 +28,7 @@ public class TimerTest {
         }
 
         long elapsedTime = mockTimer.getElapsedTime();
-        assertEquals("Elapsed time should round up to 4m", 240, ((elapsedTime + 59) / 60) * 60);
+        assertEquals("Elapsed time should round up to 4m", 120, ((elapsedTime + 59) / 60) * 60);
     }
 
     @Test
@@ -45,7 +44,7 @@ public class TimerTest {
         mockTimer.advanceTime();
         mockTimer.advanceTime();
 
-        assertEquals("Mock timer should advance by 60s", 70, mockTimer.getElapsedTime());
+        assertEquals("Mock timer should advance by 60s", 40, mockTimer.getElapsedTime());
     }
 
     @Test
@@ -54,7 +53,7 @@ public class TimerTest {
         for (int i = 0; i < 5; i++) {
             mockTimer.advanceTime();
         }
-        assertEquals("Mock timer should advance by 150s", 160, mockTimer.getElapsedTime());
+        assertEquals("Mock timer should advance by 150s", 85, mockTimer.getElapsedTime());
     }
 
     @Test

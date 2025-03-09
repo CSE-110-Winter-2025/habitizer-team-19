@@ -16,6 +16,9 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.Timer;
 import edu.ucsd.cse110.habitizer.lib.domain.TimerInterface;
 import edu.ucsd.cse110.habitizer.lib.util.Subject;
+import android.os.Handler;
+import android.os.Looper;
+
 
 public class MainViewModel extends ViewModel {
 
@@ -25,7 +28,6 @@ public class MainViewModel extends ViewModel {
     private TimerInterface timer;
     private long totalElapsedTime = 0;
     private long routineDisplayTime = 0;
-    private int hasStarted = 0;
 
     private boolean paused = false;
 
@@ -33,9 +35,12 @@ public class MainViewModel extends ViewModel {
     private final Subject<Integer> currentRoutineId ;
     private final Subject<List<Task>> currentRoutineTasks ;
     private final List<Subject<Task>> currentTaskSubjects;
-    private final Subject<Integer> currentRoutineState ; //0: initial, 1: routine started, 2:routine ended
+    private final Subject<Integer> routineState; //0: initial, 1: routine started, 2:routine ended
 
     private final Subject<Boolean> fragmentState; //True: Routine List, False: Task List
+    private final Subject<String> routineElapsedTimeFormatted = new Subject<>();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
 
 
     //
@@ -54,14 +59,14 @@ public class MainViewModel extends ViewModel {
         this.routineSubjectList = new Subject<>();
         this.currentRoutineId = new Subject<>();
         this.currentRoutineTasks = new Subject<>();
-        this.currentRoutineState = new Subject<>();
+        this.routineState = new Subject<>();
         this.fragmentState = new Subject<>();
         this.currentTaskSubjects = new ArrayList<>();
         this.timer = new Timer();
 
         //Initialize
         currentRoutineId.setValue(Integer.valueOf(-1));
-        currentRoutineState.setValue(0);
+        routineState.setValue(0);
         fragmentState.setValue(true);
 
         //Observers
@@ -85,6 +90,8 @@ public class MainViewModel extends ViewModel {
                 }
             }
         });
+
+
     }
 
     public Subject<List<Task>> getCurrentRoutineTasks() {
@@ -223,23 +230,34 @@ public class MainViewModel extends ViewModel {
 
     // Routine State Management
     public void startRoutine() {
+        setRoutineState(1);
         totalElapsedTime = 0;
         routineDisplayTime = 0;
+
+        routineElapsedTimeFormatted.setValue("00:00:00");
+
         startTimer();
-        setRoutineStatus(1);
     }
 
     public void endRoutine() {
+        long elapsed = timer.peekElapsedTime();
+
+        // Round UP to the next full minute
+        routineDisplayTime = ((elapsed + 59) / 60) * 60;
+
         endTimer();
-        setRoutineStatus(2);
+        setRoutineState(2);
+
+        // Ensure UI updates on the main thread
+        mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
     }
 
-    public void setRoutineStatus(int started) {
-        this.hasStarted = started;
+    public void setRoutineState(int status) {
+        routineState.setValue(status);
     }
 
-    public int getRoutineStatus() {
-        return this.hasStarted;
+    public Subject<Integer> getRoutineState() {
+        return routineState;
     }
 
     public void resetAllRoutines() {
@@ -249,14 +267,37 @@ public class MainViewModel extends ViewModel {
                 routine.reset();
             }
         });
-        setRoutineStatus(0);
+        setRoutineState(0);
+        routineElapsedTimeFormatted.setValue("--:--:--");
+
     }
 
     // Timer Logic:
     public void startTimer() {
         this.timer = new Timer();
         timer.startTimer();
+        routineDisplayTime = 0; // Reset routine display time
+
+        new Thread(() -> {
+            while (routineState.getValue() == 1) {
+                long elapsed = timer.peekElapsedTime(); // Fetch elapsed time without resetting task timers
+                long newRoutineTime = (elapsed / 60) * 60; // Round to nearest full minute
+
+                if (newRoutineTime > routineDisplayTime) {
+                    routineDisplayTime = newRoutineTime;
+                    // Ensure UI updates on the main thread
+                    mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
+                }
+
+                try {
+                    Thread.sleep(1000); // Update every second
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }).start();
     }
+
 
     public void endTimer() {
         timer.endTimer();
@@ -274,22 +315,16 @@ public class MainViewModel extends ViewModel {
         }
     }
 
-    public void switchToMockTimer() {
-        long currentTime = timer.getElapsedTime();
-        this.timer = new MockTimer(currentTime);
-        this.timer.startTimer();
-    }
-
     public void resetToRealTimer() {
         this.timer = new Timer();
-        this.hasStarted = 0;
+        this.routineState.setValue(0);
         totalElapsedTime = 0;
         routineDisplayTime = 0;
     }
 
     public void advanceTime() {
-        if (timer instanceof MockTimer) {
-            ((MockTimer) timer).advanceTime();
+        if (timer != null) {
+            timer.advanceTime();
         }
     }
 
@@ -310,7 +345,6 @@ public class MainViewModel extends ViewModel {
         return timer;
     }
 
-    // Task Completion & Time Tracking
     public void completeTask(@NonNull Task task) {
 
 
@@ -327,32 +361,17 @@ public class MainViewModel extends ViewModel {
         task.setCompletionStatus(2);
     }
 
-    public void setElapsedTime(@NonNull Task task) {
-        task.setElapsedTime(timer.getElapsedTime());
-    }
-
     public long getTotalElapsedTime() {
         return totalElapsedTime;
     }
 
     public String getRoutineElapsedTimeString() {
         if (routineDisplayTime <= 0) {
-            return "--:--:--";
+            return "00:00:00";
         }
         long hours = routineDisplayTime / 3600;
         long minutes = (routineDisplayTime % 3600) / 60;
         long seconds = routineDisplayTime % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    public String getTotalElapsedTimeToString() {
-        if (totalElapsedTime <= 0) {
-            return "--:--:--";
-        }
-        long roundedTime = ((totalElapsedTime + 59) / 60) * 60;
-        long hours = roundedTime / 3600;
-        long minutes = (roundedTime % 3600) / 60;
-        long seconds = roundedTime % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
@@ -371,34 +390,7 @@ public class MainViewModel extends ViewModel {
         return (elapsedTime / 60) * 60;
     }
 
-
-
-//
-//    public Subject<List<Task>> getTasks(String routineName){
-//        var tasks = new Subject<List<Task>>();
-//        tasks.setValue(Objects.requireNonNull(routineRepository.findRoutine(routineName).getValue()).getTasks());
-//        System.out.println("test");
-//        return tasks;
-//    }
-//
-//    public Subject<RoutineRepository> getRepository(){
-//        var repository = new Subject<RoutineRepository>();
-//        repository.setValue(routineRepository);
-//        return repository;
-//    }
-//
-//    public void pushTask (Task task) {
-//        var routine = routineRepository.findRoutine(selecetedRoutine);
-//        assert routine.getValue() != null;
-//        routine.getValue().addTask(task);
-//    }
-//
-//    public void removeTask(String name) {
-//        assert routineRepository.findRoutine(selecetedRoutine).getValue() != null;
-//        routineRepository.findRoutine(selecetedRoutine).getValue().removeTask(name);
-//    }
-//
-//    public void setSelectedRoutine(String selectedRoutine) {
-//        this.selecetedRoutine = selectedRoutine;
-//    }
+    public Subject<String> getRoutineElapsedTimeFormatted() {
+        return routineElapsedTimeFormatted;
+    }
 }
