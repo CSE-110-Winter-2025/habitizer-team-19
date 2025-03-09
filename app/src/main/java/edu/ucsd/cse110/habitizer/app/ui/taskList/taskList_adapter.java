@@ -96,6 +96,10 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.skipButton.setVisibility(buttonsEnabled ? View.VISIBLE : View.GONE);
         binding.taskTime.setVisibility(timerEnabled ? View.VISIBLE : View.GONE);
         binding.taskDeleteButton.setVisibility(removeEnabled ? View.VISIBLE : View.GONE);
+
+        binding.taskMoveUpButton.setVisibility(buttonsEnabled ? View.GONE : View.VISIBLE);
+        binding.taskMoveDownButton.setVisibility(buttonsEnabled ? View.GONE : View.VISIBLE);
+
     }
 
     // Setup Click Listeners
@@ -104,6 +108,8 @@ public class taskList_adapter extends ArrayAdapter<Task> {
         binding.completeButton.setOnClickListener(v -> completeTask(binding, task));
         binding.skipButton.setOnClickListener(v -> skipTask(binding, task));
         binding.taskDeleteButton.setOnClickListener(v -> deleteTask(task));
+        binding.taskMoveUpButton.setOnClickListener(v -> moveTaskUp(task));
+        binding.taskMoveDownButton.setOnClickListener(v -> moveTaskDown(task));
     }
 
     // Rename Task Dialog
@@ -177,4 +183,13 @@ public class taskList_adapter extends ArrayAdapter<Task> {
             onAllTasksDone.run();
         }
     }
+
+    private void moveTaskUp(Task task){
+        activityModel.moveTaskUp(task.id());
+    }
+
+    private void moveTaskDown(Task task){
+        activityModel.moveTaskDown(task.id());
+    }
+
 }
