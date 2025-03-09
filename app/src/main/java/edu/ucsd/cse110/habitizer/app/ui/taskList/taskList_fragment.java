@@ -1,7 +1,5 @@
 package edu.ucsd.cse110.habitizer.app.ui.taskList;
 
-import static edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository.*;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,14 +11,12 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import edu.ucsd.cse110.habitizer.app.MainActivity;
 import edu.ucsd.cse110.habitizer.app.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.app.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.confirmDeleteTaskDialogFragment;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 
 
 /**
@@ -104,10 +100,9 @@ public class taskList_fragment extends Fragment{
             }
         });
 
-
         adapter.setOnAllTasksDone(() -> {
             // Only do this if the routine is currently running
-            if (activityModel.getRoutineStatus() == 1) {
+            if (activityModel.getRoutineState().getValue() == 1) {
                 activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
                 view.StartRoutineButton.setText("Ended Routine");
@@ -118,7 +113,7 @@ public class taskList_fragment extends Fragment{
         });
 
         view.StartRoutineButton.setOnClickListener(v -> {
-            if(activityModel.getRoutineStatus() == 0){
+            if(activityModel.getRoutineState().getValue() == 0){
                 activityModel.startRoutine();
                 view.StopTimerButton.setEnabled(true);
                 adapter.setRemoveEnabled(false);
@@ -128,7 +123,7 @@ public class taskList_fragment extends Fragment{
                 view.AdvanceTimerButton.setVisibility(View.VISIBLE);
                 ((MainActivity) requireActivity()).setRoutineRunning(true);
                 view.StartRoutineButton.setText("End Routine");
-            } else if(activityModel.getRoutineStatus() == 1){
+            } else if(activityModel.getRoutineState().getValue() == 1){
                 activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
                 view.StopTimerButton.setVisibility(View.GONE);
@@ -138,14 +133,15 @@ public class taskList_fragment extends Fragment{
                 view.StopTimerButton.setEnabled(false);
                 view.AdvanceTimerButton.setEnabled(false);
             }
-            else if(activityModel.getRoutineStatus() == 2){
+            // THIS CODE BLOCK IS NEVER EXECUTED. I will be moving it to OnOptionsSelect in MainActivity
+           /* else if(activityModel.getRoutineState().getValue() == 2){
+                view.StartRoutineButton.setText("Testing");
                 activityModel.resetToRealTimer();
                 activityModel.resetAllRoutines();
                 ((MainActivity) requireActivity()).setRoutineRunning(false);
                 MainActivity mainActivity = (MainActivity) requireActivity();
-
                 mainActivity.swapFragmentRoutineList();
-            }
+            }*/
         });
 
         // Initially disable the Advance Time button

@@ -28,7 +28,7 @@ public class MainViewModel extends ViewModel {
     private TimerInterface timer;
     private long totalElapsedTime = 0;
     private long routineDisplayTime = 0;
-    private int hasStarted = 0;
+    //private int routineStatus = 0;
 
     private boolean paused = false;
 
@@ -36,7 +36,7 @@ public class MainViewModel extends ViewModel {
     private final Subject<Integer> currentRoutineId ;
     private final Subject<List<Task>> currentRoutineTasks ;
     private final List<Subject<Task>> currentTaskSubjects;
-    private final Subject<Integer> currentRoutineState ; //0: initial, 1: routine started, 2:routine ended
+    private final Subject<Integer> routineState; //0: initial, 1: routine started, 2:routine ended
 
     private final Subject<Boolean> fragmentState; //True: Routine List, False: Task List
     private final Subject<String> routineElapsedTimeFormatted = new Subject<>();
@@ -60,14 +60,14 @@ public class MainViewModel extends ViewModel {
         this.routineSubjectList = new Subject<>();
         this.currentRoutineId = new Subject<>();
         this.currentRoutineTasks = new Subject<>();
-        this.currentRoutineState = new Subject<>();
+        this.routineState = new Subject<>();
         this.fragmentState = new Subject<>();
         this.currentTaskSubjects = new ArrayList<>();
         this.timer = new Timer();
 
         //Initialize
         currentRoutineId.setValue(Integer.valueOf(-1));
-        currentRoutineState.setValue(0);
+        routineState.setValue(0);
         fragmentState.setValue(true);
 
         //Observers
@@ -91,6 +91,8 @@ public class MainViewModel extends ViewModel {
                 }
             }
         });
+
+
     }
 
     public Subject<List<Task>> getCurrentRoutineTasks() {
@@ -199,7 +201,7 @@ public class MainViewModel extends ViewModel {
 
     // Routine State Management
     public void startRoutine() {
-        setRoutineStatus(1);
+        setRoutineState(1);
         totalElapsedTime = 0;
         routineDisplayTime = 0;
 
@@ -215,18 +217,18 @@ public class MainViewModel extends ViewModel {
         routineDisplayTime = ((elapsed + 59) / 60) * 60;
 
         endTimer();
-        setRoutineStatus(2);
+        setRoutineState(2);
 
         // Ensure UI updates on the main thread
         mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
     }
 
-    public void setRoutineStatus(int started) {
-        this.hasStarted = started;
+    public void setRoutineState(int status) {
+        routineState.setValue(status);
     }
 
-    public int getRoutineStatus() {
-        return this.hasStarted;
+    public Subject<Integer> getRoutineState() {
+        return routineState;
     }
 
     public void resetAllRoutines() {
@@ -236,7 +238,9 @@ public class MainViewModel extends ViewModel {
                 routine.reset();
             }
         });
-        setRoutineStatus(0);
+        setRoutineState(0);
+        routineElapsedTimeFormatted.setValue("--:--:--");
+
     }
 
     // Timer Logic:
@@ -246,7 +250,7 @@ public class MainViewModel extends ViewModel {
         routineDisplayTime = 0; // Reset routine display time
 
         new Thread(() -> {
-            while (hasStarted == 1) {
+            while (routineState.getValue() == 1) {
                 long elapsed = timer.peekElapsedTime(); // Fetch elapsed time without resetting task timers
                 long newRoutineTime = (elapsed / 60) * 60; // Round to nearest full minute
 
@@ -290,7 +294,7 @@ public class MainViewModel extends ViewModel {
 
     public void resetToRealTimer() {
         this.timer = new Timer();
-        this.hasStarted = 0;
+        this.routineState.setValue(0);
         totalElapsedTime = 0;
         routineDisplayTime = 0;
     }

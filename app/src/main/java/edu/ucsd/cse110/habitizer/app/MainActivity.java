@@ -30,12 +30,19 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     private TextView toolbarSubtitle;
     private ActivityMainBinding view;
     private Menu mMenu;
+    private MainViewModel activityModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.view = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
+
+        var modelOwner = this;
+        var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
+        var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
+        activityModel = modelProvider.get(MainViewModel.class);
+
 
         initializeToolbar();
         swapFragmentRoutineList();
@@ -129,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            activityModel.resetToRealTimer();
+            activityModel.resetAllRoutines();
             swapFragmentRoutineList();
             return true;
         } else if (item.getItemId() == R.id.action_bar_add_task) {
