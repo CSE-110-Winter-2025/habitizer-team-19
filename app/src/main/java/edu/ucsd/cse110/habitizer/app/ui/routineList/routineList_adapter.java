@@ -50,14 +50,34 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
             binding = ListItemRoutineBinding.inflate(layoutInflater, parent, false);
         }
 
+        //set routine title and goal time text views
         binding.routineTitle.setText(routine.getName());
         binding.goalTime.setText("Goal Time: " + routine.getGoalTimeToString());
 
+        //rename routine dialog logic
         binding.routineTitle.setOnClickListener(v -> {
-            ((edu.ucsd.cse110.habitizer.app.MainActivity) getContext())
-                    .swapFragmentTaskList(routine.id(),routine.getName(), "Goal Time: " + routine.getGoalTimeToString());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Rename Routine");
+
+            final EditText input = new EditText(getContext());
+            input.setText(routine.getName());
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String newName = input.getText().toString().trim();
+                if (!newName.isEmpty() && !newName.equals(routine.getName())) {
+                    routine.setName(newName);
+                    notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "Invalid name", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
         });
 
+        //edit goal time logic
         binding.goalTime.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Edit Goal Time");
@@ -80,6 +100,12 @@ public class routineList_adapter extends ArrayAdapter<Routine> {
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
             builder.show();
+        });
+
+        //routine card click to task list logic
+        binding.getRoot().setOnClickListener(v -> {
+            ((edu.ucsd.cse110.habitizer.app.MainActivity) getContext())
+                    .swapFragmentTaskList(routine.id(), routine.getName(), "Goal Time: " + routine.getGoalTimeToString());
         });
 
         return binding.getRoot();
