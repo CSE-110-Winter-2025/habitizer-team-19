@@ -26,7 +26,6 @@ public class MainViewModel extends ViewModel {
     private final RoutineRepository routineRepository;
 
     private TimerInterface timer;
-    private long totalElapsedTime = 0;
     private long routineDisplayTime = 0;
 
     private boolean paused = false;
@@ -231,7 +230,6 @@ public class MainViewModel extends ViewModel {
     // Routine State Management
     public void startRoutine() {
         setRoutineState(1);
-        totalElapsedTime = 0;
         routineDisplayTime = 0;
 
         routineElapsedTimeFormatted.setValue("00:00:00");
@@ -318,7 +316,6 @@ public class MainViewModel extends ViewModel {
     public void resetToRealTimer() {
         this.timer = new Timer();
         this.routineState.setValue(0);
-        totalElapsedTime = 0;
         routineDisplayTime = 0;
     }
 
@@ -349,7 +346,6 @@ public class MainViewModel extends ViewModel {
 
 
         long elapsedTime = getElapsedTime();
-        totalElapsedTime += elapsedTime;
         long roundedTaskTime = taskDisplay(elapsedTime);
 
         // Commented out because when checking task it might make routineDisplayName larger and delay the changing of the asynchronous timer
@@ -360,10 +356,6 @@ public class MainViewModel extends ViewModel {
 
     public void skipTask(@NonNull Task task){
         task.setCompletionStatus(2);
-    }
-
-    public long getTotalElapsedTime() {
-        return totalElapsedTime;
     }
 
     public String getRoutineElapsedTimeString() {
