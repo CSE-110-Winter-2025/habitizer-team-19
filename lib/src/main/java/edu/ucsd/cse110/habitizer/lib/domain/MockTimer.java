@@ -59,7 +59,7 @@ public class MockTimer implements TimerInterface {
     }
     public void advanceTime() {
         if (isRunning) {
-            elapsedTime += 30;
+            elapsedTime += 15;
         }
     }
 

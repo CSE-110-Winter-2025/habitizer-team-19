@@ -285,12 +285,6 @@ public class MainViewModel extends ViewModel {
         }
     }
 
-    public void switchToMockTimer() {
-        long currentTime = timer.getElapsedTime();
-        this.timer = new MockTimer(currentTime);
-        this.timer.startTimer();
-    }
-
     public void resetToRealTimer() {
         this.timer = new Timer();
         this.routineState.setValue(0);
@@ -299,18 +293,10 @@ public class MainViewModel extends ViewModel {
     }
 
     public void advanceTime() {
-        if (timer instanceof MockTimer) {
-            ((MockTimer) timer).advanceTime();
-
-            long elapsed = timer.peekElapsedTime();
-            long currentMinutes = elapsed / 60;
-            if (currentMinutes > routineDisplayTime) {
-                routineDisplayTime = currentMinutes;
-                routineElapsedTimeFormatted.setValue(formatElapsedTime(elapsed));
-            }
+        if (timer != null) {
+            timer.advanceTime();
         }
     }
-
 
     public static long taskDisplay(long elapsedTime){
         if(elapsedTime<60) {
@@ -329,7 +315,6 @@ public class MainViewModel extends ViewModel {
         return timer;
     }
 
-    // Task Completion & Time Tracking
     public void completeTask(@NonNull Task task) {
 
 
@@ -346,10 +331,6 @@ public class MainViewModel extends ViewModel {
         task.setCompletionStatus(2);
     }
 
-    public void setElapsedTime(@NonNull Task task) {
-        task.setElapsedTime(timer.getElapsedTime());
-    }
-
     public long getTotalElapsedTime() {
         return totalElapsedTime;
     }
@@ -361,17 +342,6 @@ public class MainViewModel extends ViewModel {
         long hours = routineDisplayTime / 3600;
         long minutes = (routineDisplayTime % 3600) / 60;
         long seconds = routineDisplayTime % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    public String getTotalElapsedTimeToString() {
-        if (totalElapsedTime <= 0) {
-            return "--:--:--";
-        }
-        long roundedTime = ((totalElapsedTime + 59) / 60) * 60;
-        long hours = roundedTime / 3600;
-        long minutes = (roundedTime % 3600) / 60;
-        long seconds = roundedTime % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
@@ -391,41 +361,4 @@ public class MainViewModel extends ViewModel {
     public Subject<String> getRoutineElapsedTimeFormatted() {
         return routineElapsedTimeFormatted;
     }
-
-    private String formatElapsedTime(long seconds) {
-        long hours = seconds / 3600;
-        long minutes = (seconds % 3600) / 60;
-        long secs = seconds % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, secs);
-    }
-
-
-//
-//    public Subject<List<Task>> getTasks(String routineName){
-//        var tasks = new Subject<List<Task>>();
-//        tasks.setValue(Objects.requireNonNull(routineRepository.findRoutine(routineName).getValue()).getTasks());
-//        System.out.println("test");
-//        return tasks;
-//    }
-//
-//    public Subject<RoutineRepository> getRepository(){
-//        var repository = new Subject<RoutineRepository>();
-//        repository.setValue(routineRepository);
-//        return repository;
-//    }
-//
-//    public void pushTask (Task task) {
-//        var routine = routineRepository.findRoutine(selecetedRoutine);
-//        assert routine.getValue() != null;
-//        routine.getValue().addTask(task);
-//    }
-//
-//    public void removeTask(String name) {
-//        assert routineRepository.findRoutine(selecetedRoutine).getValue() != null;
-//        routineRepository.findRoutine(selecetedRoutine).getValue().removeTask(name);
-//    }
-//
-//    public void setSelectedRoutine(String selectedRoutine) {
-//        this.selectedRoutine = selectedRoutine;
-//    }
 }

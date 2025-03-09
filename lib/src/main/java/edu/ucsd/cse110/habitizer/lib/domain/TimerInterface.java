@@ -8,4 +8,5 @@ public interface TimerInterface {
     void pauseTimer();
     void resumeTimer();
 
+    void advanceTime();
 }

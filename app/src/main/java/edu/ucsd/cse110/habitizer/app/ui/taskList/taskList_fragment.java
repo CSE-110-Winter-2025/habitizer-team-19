@@ -105,6 +105,8 @@ public class taskList_fragment extends Fragment{
             if (activityModel.getRoutineState().getValue() == 1) {
                 activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
+                view.StopTimerButton.setVisibility(View.GONE);
+                view.AdvanceTimerButton.setVisibility(View.GONE);
                 view.StartRoutineButton.setText("Ended Routine");
                 view.StartRoutineButton.setEnabled(false);
                 view.StopTimerButton.setEnabled(false);
@@ -155,7 +157,6 @@ public class taskList_fragment extends Fragment{
             }
         });
 
-        // Manually Advance Time (only works in mock mode)
         view.AdvanceTimerButton.setOnClickListener(v -> {
             activityModel.advanceTime();
         });
