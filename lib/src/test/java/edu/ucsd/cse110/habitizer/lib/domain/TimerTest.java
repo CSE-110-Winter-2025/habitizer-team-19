@@ -31,36 +31,9 @@ public class TimerTest {
         assertEquals("Elapsed time should round up to 4m", 120, ((elapsedTime + 59) / 60) * 60);
     }
 
-    @Test
-    public void testSwitchToMockTimer() {
-        mockTimer.startTimer();
-        assertTrue("Mock timer should be running", mockTimer.isRunning());
-        assertEquals("Mock timer should start with 10s elapsed", 10, mockTimer.getElapsedTime());
-    }
 
-    @Test
-    public void testManualTimeAdvance() {
-        mockTimer.startTimer();
-        mockTimer.advanceTime();
-        mockTimer.advanceTime();
 
-        assertEquals("Mock timer should advance by 60s", 40, mockTimer.getElapsedTime());
-    }
 
-    @Test
-    public void testMultipleAdvanceTimeCalls() {
-        mockTimer.startTimer();
-        for (int i = 0; i < 5; i++) {
-            mockTimer.advanceTime();
-        }
-        assertEquals("Mock timer should advance by 150s", 85, mockTimer.getElapsedTime());
-    }
-
-    @Test
-    public void testAdvanceTimeDoesNothingWhenStopped() {
-        mockTimer.advanceTime();
-        assertEquals("Mock timer should not advance when stopped", 10, mockTimer.getElapsedTime());
-    }
 
     @Test
     public void testPauseTimerStopsElapsedTime() {

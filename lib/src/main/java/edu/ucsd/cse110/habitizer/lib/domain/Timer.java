@@ -77,6 +77,17 @@ public class Timer implements TimerInterface {
         return (System.currentTimeMillis() / 1000) - startTime + advanceOffset;
     }
 
+    public long peekTaskElapsedTime() {
+        if (startTime == 0) {
+            return 0;
+        }
+        if (isPaused) {
+            return pausedTime - prevTime + advanceOffset;
+        }
+        return (System.currentTimeMillis() / 1000) - prevTime + advanceOffset;
+    }
+
+
     public void advanceTime() {
         if (isPaused) {
             advanceOffset += 15;

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import edu.ucsd.cse110.habitizer.lib.domain.MockTimer;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
@@ -22,11 +21,11 @@ import android.os.Looper;
 
 public class MainViewModel extends ViewModel {
 
-    // Insert States:
     private final RoutineRepository routineRepository;
 
     private TimerInterface timer;
     private long routineDisplayTime = 0;
+    private long taskDisplayTime = 0;
 
     private boolean paused = false;
 
@@ -38,11 +37,12 @@ public class MainViewModel extends ViewModel {
 
     private final Subject<Boolean> fragmentState; //True: Routine List, False: Task List
     private final Subject<String> routineElapsedTimeFormatted = new Subject<>();
+    private final Subject<String> taskElapsedTimeFormatted = new Subject<>();
+
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
 
 
-    //
     public static final ViewModelInitializer<MainViewModel> initializer =
             new ViewModelInitializer<>(
                     MainViewModel.class,
@@ -231,8 +231,10 @@ public class MainViewModel extends ViewModel {
     public void startRoutine() {
         setRoutineState(1);
         routineDisplayTime = 0;
+        taskDisplayTime = 0;
 
         routineElapsedTimeFormatted.setValue("00:00:00");
+        taskElapsedTimeFormatted.setValue("00:00:00");
 
         startTimer();
     }
@@ -242,12 +244,15 @@ public class MainViewModel extends ViewModel {
 
         // Round UP to the next full minute
         routineDisplayTime = ((elapsed + 59) / 60) * 60;
+        taskDisplayTime = 0;
 
         endTimer();
         setRoutineState(2);
 
         // Ensure UI updates on the main thread
-        mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
+        mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getElapsedTimeString(routineDisplayTime)));
+        mainHandler.post(() -> taskElapsedTimeFormatted.setValue(getElapsedTimeString(taskDisplayTime)));
+
     }
 
     public void setRoutineState(int status) {
@@ -267,6 +272,8 @@ public class MainViewModel extends ViewModel {
         });
         setRoutineState(0);
         routineElapsedTimeFormatted.setValue("--:--:--");
+        taskElapsedTimeFormatted.setValue("--:--:--");
+
 
     }
 
@@ -274,18 +281,24 @@ public class MainViewModel extends ViewModel {
     public void startTimer() {
         this.timer = new Timer();
         timer.startTimer();
-        routineDisplayTime = 0; // Reset routine display time
-
+        routineDisplayTime = 0;
+        taskDisplayTime = 0;
         new Thread(() -> {
             while (routineState.getValue() == 1) {
-                long elapsed = timer.peekElapsedTime(); // Fetch elapsed time without resetting task timers
-                long newRoutineTime = (elapsed / 60) * 60; // Round to nearest full minute
+
+                // Routine async elapsed time logic
+                long routineElapsed = timer.peekElapsedTime();
+                long newRoutineTime = (routineElapsed / 60) * 60; // Round to nearest full minute
 
                 if (newRoutineTime > routineDisplayTime) {
                     routineDisplayTime = newRoutineTime;
                     // Ensure UI updates on the main thread
-                    mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getRoutineElapsedTimeString()));
+                    mainHandler.post(() -> routineElapsedTimeFormatted.setValue(getElapsedTimeString(routineDisplayTime)));
                 }
+
+                // task async elapsed time logic
+                long taskElapsed = timer.peekTaskElapsedTime();
+                mainHandler.post(() -> taskElapsedTimeFormatted.setValue(getElapsedTimeString(taskElapsed)));
 
                 try {
                     Thread.sleep(1000); // Update every second
@@ -317,6 +330,7 @@ public class MainViewModel extends ViewModel {
         this.timer = new Timer();
         this.routineState.setValue(0);
         routineDisplayTime = 0;
+        taskDisplayTime = 0;
     }
 
     public void advanceTime() {
@@ -347,9 +361,6 @@ public class MainViewModel extends ViewModel {
 
         long elapsedTime = getElapsedTime();
         long roundedTaskTime = taskDisplay(elapsedTime);
-
-        // Commented out because when checking task it might make routineDisplayName larger and delay the changing of the asynchronous timer
-        // routineDisplayTime += getRoundedRoutineElapsedTime(elapsedTime);
         task.setElapsedTime(roundedTaskTime);
         task.setCompletionStatus(1);
     }
@@ -358,13 +369,13 @@ public class MainViewModel extends ViewModel {
         task.setCompletionStatus(2);
     }
 
-    public String getRoutineElapsedTimeString() {
-        if (routineDisplayTime <= 0) {
+    public String getElapsedTimeString(long time) {
+        if (time <= 0) {
             return "00:00:00";
         }
-        long hours = routineDisplayTime / 3600;
-        long minutes = (routineDisplayTime % 3600) / 60;
-        long seconds = routineDisplayTime % 60;
+        long hours = time / 3600;
+        long minutes = (time % 3600) / 60;
+        long seconds = time % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
@@ -379,11 +390,12 @@ public class MainViewModel extends ViewModel {
 
 
     // Helper Methods
-    public long getRoundedRoutineElapsedTime(long elapsedTime) {
-        return (elapsedTime / 60) * 60;
-    }
 
     public Subject<String> getRoutineElapsedTimeFormatted() {
         return routineElapsedTimeFormatted;
     }
+    public Subject<String> getTaskElapsedTimeFormatted() {
+        return taskElapsedTimeFormatted;
+    }
+
 }
