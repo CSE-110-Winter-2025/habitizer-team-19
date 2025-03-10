@@ -12,7 +12,7 @@ public class Routine {
 
     // Data Field
     private final @Nullable Integer id;
-    private final @NonNull String name;
+    private @NonNull String name;
     private long goalTimeSeconds;
     private final @NonNull List<Task> tasks;
 
@@ -94,6 +94,9 @@ public class Routine {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    public void setName(String newName) {
+        this.name = newName;
+    }
 
 
 }
