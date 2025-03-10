@@ -126,6 +126,17 @@ public class RoutineTest{
         assertEquals(tasks,actual);
     }
 
+    @Test
+    public void testRenameRoutine() {
+        Routine routine = new Routine(0,"Morning", 60*60, new ArrayList<>());
+        String originalName = routine.getName();
+
+        String newName = "Friday Evening";
+        routine.setName(newName);
+        assertNotEquals("Different than original", originalName, routine.getName());
+        assertEquals("New name updated correctly", newName, routine.getName());
+    }
+
     // Integration Tests
 
 }
