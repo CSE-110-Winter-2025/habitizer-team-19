@@ -58,10 +58,13 @@ public class Timer implements TimerInterface {
     public void resumeTimer() {
         if (isPaused) {
             long currentTime = System.currentTimeMillis() / 1000;
-            this.prevTime += (currentTime - pausedTime) + advanceOffset;
+            long pausedElapsed = pausedTime - startTime + advanceOffset;
+            startTime = currentTime - pausedElapsed;
+            prevTime = currentTime - (pausedTime - prevTime + advanceOffset);
             advanceOffset = 0;
-            this.isPaused = false;
+            isPaused = false;
         }
+
     }
 
     public long peekElapsedTime() {
@@ -73,6 +76,17 @@ public class Timer implements TimerInterface {
         }
         return (System.currentTimeMillis() / 1000) - startTime + advanceOffset;
     }
+
+    public long peekTaskElapsedTime() {
+        if (startTime == 0) {
+            return 0;
+        }
+        if (isPaused) {
+            return pausedTime - prevTime + advanceOffset;
+        }
+        return (System.currentTimeMillis() / 1000) - prevTime + advanceOffset;
+    }
+
 
     public void advanceTime() {
         if (isPaused) {

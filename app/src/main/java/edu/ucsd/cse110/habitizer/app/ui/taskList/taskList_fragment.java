@@ -88,17 +88,28 @@ public class taskList_fragment extends Fragment{
         view.StopTimerButton.setVisibility(View.GONE);
         view.AdvanceTimerButton.setVisibility(View.GONE);
 
+/*
         adapter.setOnTaskComplete(totalTime -> {
             view.TotalElapsedTime.setText("Total Elapsed Time: " + activityModel.getRoutineElapsedTimeString());
         });
 
+*/
         activityModel.getRoutineElapsedTimeFormatted().observe(time -> {
             if (time != null) {
-                view.TotalElapsedTime.setText("Total Elapsed Time: " + time);
+                view.TotalElapsedTime.setText("Elapsed Time: " + time);
             } else {
-                view.TotalElapsedTime.setText("Total Elapsed Time: --:--:--"); // Ensures it never shows null
+                view.TotalElapsedTime.setText("Elapsed Time: --:--:--");
             }
         });
+
+        activityModel.getTaskElapsedTimeFormatted().observe(taskTime -> {
+            if (taskTime != null) {
+                view.TaskElapsedTime.setText("Task Elapsed Time: " + taskTime);
+            } else {
+                view.TaskElapsedTime.setText("Task Elapsed Time: --:--:--");
+            }
+        });
+
 
         adapter.setOnAllTasksDone(() -> {
             // Only do this if the routine is currently running

@@ -9,4 +9,6 @@ public interface TimerInterface {
     void resumeTimer();
 
     void advanceTime();
+
+    long peekTaskElapsedTime();
 }
