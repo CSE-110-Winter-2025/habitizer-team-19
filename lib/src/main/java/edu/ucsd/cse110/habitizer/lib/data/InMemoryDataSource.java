@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.habitizer.lib.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,14 @@ public class InMemoryDataSource {
     public static InMemoryDataSource fromDefault() {
         var data = new InMemoryDataSource();
         for (Routine routine : DEFAULT_ROUTINES) {
+            data.putRoutine(routine);
+        }
+        return data;
+    }
+
+    public static InMemoryDataSource fromList(List<Routine> list) {
+        var data = new InMemoryDataSource();
+        for (Routine routine : list) {
             data.putRoutine(routine);
         }
         return data;

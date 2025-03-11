@@ -174,6 +174,10 @@ public class taskList_fragment extends Fragment{
             activityModel.advanceTime();
         });
 
+        view.SaveRoutineButton.setOnClickListener(v -> {
+            activityModel.saveRoutineList(requireContext());
+        });
+
         return view.getRoot();
     }
 

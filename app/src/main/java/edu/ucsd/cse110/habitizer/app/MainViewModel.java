@@ -1,10 +1,14 @@
 package edu.ucsd.cse110.habitizer.app;
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +30,9 @@ public class MainViewModel extends ViewModel {
     private TimerInterface timer;
     private long routineDisplayTime = 0;
     private long taskDisplayTime = 0;
+
+    private boolean routineRunning = false;
+    private String selectedRoutine = null;
 
     private boolean paused = false;
 
@@ -387,7 +394,21 @@ public class MainViewModel extends ViewModel {
         this.paused = paused;
     }
 
-
+    public void saveRoutineList(Context context) {
+        try (FileOutputStream fos = context.openFileOutput("repoData", Context.MODE_PRIVATE);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            List<Routine> list = routineRepository.findAllRoutines().getValue();
+            oos.writeObject(list);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try (FileOutputStream fos = context.openFileOutput("runData", Context.MODE_PRIVATE);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(selectedRoutine);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // Helper Methods
 
@@ -398,4 +419,19 @@ public class MainViewModel extends ViewModel {
         return taskElapsedTimeFormatted;
     }
 
+    public boolean isRoutineRunning() {
+        return routineRunning;
+    }
+
+    public void setRoutineRunning(boolean routineRunning) {
+        this.routineRunning = routineRunning;
+    }
+
+    public String getSelectedRoutine() {
+        return selectedRoutine;
+    }
+
+    public void setSelectedRoutine(String selectedRoutine) {
+        this.selectedRoutine = selectedRoutine;
+    }
 }

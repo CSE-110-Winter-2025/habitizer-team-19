@@ -2,9 +2,10 @@ package edu.ucsd.cse110.habitizer.lib.util;
 
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Subject<T> {
+public class Subject<T> implements Serializable {
     private @Nullable T value = null;
     private final List<Observer<T>> observers = new java.util.ArrayList<>();
 

@@ -3,6 +3,7 @@ package edu.ucsd.cse110.habitizer.app;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,17 +15,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.List;
+
 import edu.ucsd.cse110.habitizer.app.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.habitizer.app.ui.routineList.routineList_fragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.confirmDeleteTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.dialog.createTaskDialogFragment;
 import edu.ucsd.cse110.habitizer.app.ui.taskList.taskList_fragment;
+import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 
 public class MainActivity extends AppCompatActivity implements createTaskDialogFragment.DialogListener, confirmDeleteTaskDialogFragment.DialogListener {
 
     private boolean isTaskListFragmentVisible = false;
-    private boolean routineRunning = false;
-    private String selectedRoutine = null;
+
     private Toolbar toolbar;
     private TextView toolbarTitle;
     private TextView toolbarSubtitle;
@@ -43,9 +49,39 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         activityModel = modelProvider.get(MainViewModel.class);
 
-
         initializeToolbar();
-        swapFragmentRoutineList();
+
+        //Load running routine if possible
+        try (FileInputStream fis = this.getApplicationContext().openFileInput("runData");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            String runningName = (String) ois.readObject();
+            List<Routine> routineList = activityModel.getRoutines().getValue();
+            Routine routine = null;
+            for(Routine r: routineList) {
+                if(r.getName().equals(runningName)) {
+                    routine = r;
+                    break;
+                }
+            }
+            if(routine != null) {
+                swapFragmentTaskList(routine.id(), routine.getName(), "Goal Time: " + routine.getGoalTimeToString());
+            } else {
+                swapFragmentRoutineList();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            swapFragmentRoutineList();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        for(int x = 0;x<10;x++) {
+            Log.e("SLURP", "GAHHHH");
+        }
+        activityModel.saveRoutineList(this);
+        super.onStop();
     }
 
     // Toolbar Initialization
@@ -69,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     // Fragment Management
     public void swapFragmentTaskList(Integer id,@NonNull String selectedRoutineTitle, @NonNull String selectedRoutineGoalTime) {
         isTaskListFragmentVisible = true;
-        selectedRoutine = selectedRoutineTitle;
+        activityModel.setSelectedRoutine(selectedRoutineTitle);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -89,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
 
     public void swapFragmentRoutineList() {
         isTaskListFragmentVisible = false;
-        selectedRoutine = null;
+        activityModel.setSelectedRoutine(null);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -107,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
     }
 
     public void setRoutineRunning(boolean val) {
-        routineRunning = val;
+        activityModel.setRoutineRunning(val);
         updateBackButtonVisibility();
     }
 
@@ -118,10 +154,10 @@ public class MainActivity extends AppCompatActivity implements createTaskDialogF
         }
 
         if (mMenu != null) {
-            boolean shouldShowAddTaskButton = isTaskListFragmentVisible && !routineRunning;
+            boolean shouldShowAddTaskButton = isTaskListFragmentVisible && !activityModel.isRoutineRunning();
             boolean shouldShowAddRoutineButton = !isTaskListFragmentVisible;
-            mMenu.findItem(R.id.action_bar_add_task).setVisible(shouldShowAddTaskButton || selectedRoutine != null);
-            mMenu.findItem(R.id.action_bar_add_routine).setVisible(shouldShowAddRoutineButton || selectedRoutine == null);
+            mMenu.findItem(R.id.action_bar_add_task).setVisible(shouldShowAddTaskButton || activityModel.getSelectedRoutine() != null);
+            mMenu.findItem(R.id.action_bar_add_routine).setVisible(shouldShowAddRoutineButton || activityModel.getSelectedRoutine() == null);
         }
     }
 

@@ -3,7 +3,9 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
 
     //Data Field
     private @Nullable Integer id;
