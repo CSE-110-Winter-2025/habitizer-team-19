@@ -83,10 +83,11 @@ public class taskList_fragment extends Fragment{
                              Bundle savedInstanceState) {
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
         view.taskList.setAdapter(adapter);
+        view.SaveRoutineButton.setVisibility(View.VISIBLE);
         view.StopTimerButton.setEnabled(false);
         view.AdvanceTimerButton.setEnabled(false);
         view.StopTimerButton.setVisibility(View.GONE);
-        view.AdvanceTimerButton.setVisibility(View.GONE);
+        //view.AdvanceTimerButton.setVisibility(View.GONE);
 
 /*
         adapter.setOnTaskComplete(totalTime -> {
@@ -128,6 +129,7 @@ public class taskList_fragment extends Fragment{
         view.StartRoutineButton.setOnClickListener(v -> {
             if(activityModel.getRoutineState().getValue() == 0){
                 activityModel.startRoutine();
+                view.SaveRoutineButton.setVisibility(View.GONE);
                 view.StopTimerButton.setEnabled(true);
                 adapter.setRemoveEnabled(false);
                 adapter.setTimerEnabled(true);
@@ -135,7 +137,7 @@ public class taskList_fragment extends Fragment{
                 view.StopTimerButton.setVisibility(View.VISIBLE);
                 view.AdvanceTimerButton.setVisibility(View.VISIBLE);
                 ((MainActivity) requireActivity()).setRoutineRunning(true);
-                view.StartRoutineButton.setText("End Routine");
+                view.StartRoutineButton.setText("End");
             } else if(activityModel.getRoutineState().getValue() == 1){
                 activityModel.endRoutine();
                 adapter.setButtonsEnabled(false);
