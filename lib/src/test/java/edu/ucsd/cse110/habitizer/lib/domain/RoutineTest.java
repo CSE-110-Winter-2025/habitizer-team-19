@@ -137,6 +137,4 @@ public class RoutineTest{
         assertEquals("New name updated correctly", newName, routine.getName());
     }
 
-    // Integration Tests
-
 }
