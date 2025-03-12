@@ -7,8 +7,6 @@ import org.junit.Test;
 
 public class TaskTest {
 
-    //Unit Tests
-
     @Test
     public void testWithId(){
         Task task = new Task("Task 1");
@@ -31,7 +29,5 @@ public class TaskTest {
 
         assertEquals(expected,actual);
     }
-
-    // Integration Tests
 
 }

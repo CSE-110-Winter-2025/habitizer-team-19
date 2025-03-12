@@ -31,10 +31,6 @@ public class TimerTest {
         assertEquals("Elapsed time should round up to 4m", 120, ((elapsedTime + 59) / 60) * 60);
     }
 
-
-
-
-
     @Test
     public void testPauseTimerStopsElapsedTime() {
         timer.startTimer();
@@ -53,7 +49,6 @@ public class TimerTest {
         long pausedElapsed = timer.getElapsedTime();
 
         timer.resumeTimer();
-        //simulate 1 second passing
         Thread.sleep(1000);
         long elapsedAfterResume = timer.getElapsedTime();
 
@@ -63,13 +58,11 @@ public class TimerTest {
     @Test
     public void testMultiplePauseResumeCycles() throws InterruptedException {
         timer.startTimer();
-        //simulate 2 seconds passing
         Thread.sleep(2000);
         timer.pauseTimer();
         long firstPauseTime = timer.getElapsedTime();
 
         timer.resumeTimer();
-        //simulate 1 second passing
         Thread.sleep(1000);
         timer.pauseTimer();
         long secondPauseTime = timer.getElapsedTime();
@@ -81,8 +74,7 @@ public class TimerTest {
         timer.startTimer();
         long initialElapsed = timer.getElapsedTime();
 
-        timer.resumeTimer();//should have no effect
-        //simulate 1 second passing
+        timer.resumeTimer();
         Thread.sleep(1000);
         long elapsedAfterResume = timer.getElapsedTime();
 
