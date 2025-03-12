@@ -23,7 +23,7 @@ public class AsynchronousTaskTimerTest {
         routine = new Routine("Morning Routine", 3600, new ArrayList<>(List.of(task1, task2)));
     }
 
-    // Helper Function
+    // Helper Function (copied directly from MainViewModel class)
     public static long taskDisplay(long elapsedTime){
         if(elapsedTime<60) {
             return ((elapsedTime-1)/5)*5+5;
@@ -41,6 +41,9 @@ public class AsynchronousTaskTimerTest {
 
         timer.advanceTime();
         timer.advanceTime();
+       /* long testtasktime = timer.peekElapsedTime() +2;
+        assertEquals(32,testtasktime);
+        assertEquals("Rounded elapsed time should be up to nearest 5 seconds", 35, taskDisplay(testtasktime));*/
         timer.advanceTime();
         timer.advanceTime();
         timer.advanceTime();
@@ -56,5 +59,32 @@ public class AsynchronousTaskTimerTest {
 
         assertEquals("Task completion status should be 1 (Completed)", Integer.valueOf(1), task1.getCompletionStatus());
         assertEquals("Task elapsed time should be rounded to 120s", 120, task1.getElapsedTime());
+    }
+
+    @Test
+    public void testTaskTimeRelativeToPrevious(){
+
+    }
+
+    //5 second rounding
+    @Test
+    public void testTaskTimeRoundUp(){
+        timer.startTimer();
+        assertTrue("Timer should be running", timer.isRunning());
+
+        timer.advanceTime();
+        timer.advanceTime();
+        long testtasktime = timer.peekElapsedTime() +2;
+        assertEquals(32,testtasktime);
+        assertEquals("Rounded elapsed time should be up to nearest 5 seconds", 35, taskDisplay(testtasktime));
+        timer.advanceTime();
+        timer.advanceTime();
+        timer.advanceTime();
+
+        long elapsedTime = timer.peekElapsedTime();
+        assertEquals("Elapsed time should be 75s before rounding", 75, elapsedTime);
+
+        long roundedElapsedTime = taskDisplay(elapsedTime);
+        assertEquals("Rounded elapsed time should be 120 seconds (next minute)", 120, roundedElapsedTime);
     }
 }

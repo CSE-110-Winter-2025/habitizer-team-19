@@ -45,7 +45,7 @@ public class AsynchronousRoutineTimerTest {
 
         timer.advanceTime();
         timer.advanceTime();
-        assertEquals("Before end, peekElapsedTime should be 15", 60, timer.peekElapsedTime());
+        assertEquals("Before end, peekElapsedTime should be 60", 60, timer.peekElapsedTime());
         elapsedAfterAdvances = timer.peekElapsedTime();
         routineDisplayTime = getRoutineDisplayTime(elapsedAfterAdvances);
 
