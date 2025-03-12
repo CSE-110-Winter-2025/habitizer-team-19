@@ -3,12 +3,13 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class Routine {
+public class Routine implements Serializable {
 
     // Data Field
     private final @Nullable Integer id;
