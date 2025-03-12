@@ -187,4 +187,5 @@ public class MockTimerTest {
         timer.advanceTime();
         assertEquals("Advance time while paused should add 15 seconds", 15, timer.getElapsedTime());
     }
+
 }

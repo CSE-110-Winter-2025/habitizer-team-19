@@ -79,7 +79,7 @@ public class RoutineRepositoryTest {
     }
 
     @Test
-    public void testSaveRoutine() {
+    public void testAddRoutine() {
         var data = new InMemoryDataSource();
         List<Routine> routines = List.of(
                 new Routine(0, "Morning", 60 * 60, new ArrayList<Task>(List.of(
